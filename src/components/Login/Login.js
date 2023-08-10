@@ -74,7 +74,7 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in to the Banking Application
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -105,8 +105,13 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/recover/password" variant="body2">
                     Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item xs>
+                  <Link href="/recover/username" variant="body2">
+                    Forgot Username?
                   </Link>
                 </Grid>
                 <Grid item>
