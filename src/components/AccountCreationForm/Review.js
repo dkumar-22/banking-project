@@ -59,12 +59,12 @@ export default function Review({
         details.country,
     ];
     const paddresses = [
-        details.paddress1,
-        details.paddress2,
-        details.pcity,
-        details.pstate,
-        details.pzip,
-        details.pcountry,
+        details.paddress1 ==='' ? details.address1 : details.paddress1,
+        details.paddress2 ==='' ? details.address2 : details.paddress2,
+        details.pcity ==='' ? details.city : details.pcity,
+        details.pstate ==='' ? details.state : details.pstate,
+        details.pzip ==='' ? details.zip : details.pzip,
+        details.pcountry ==='' ? details.country : details.pcountry,
     ];
 
     return (
@@ -120,20 +120,18 @@ export default function Review({
                     justifyContent: "flex-end",
                 }}
             >
-                {activeStep !== 0 && (
+                {
                     <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                         Back
                     </Button>
-                )}
+                }
 
                 <Button
                     variant="contained"
                     onClick={handleNext}
                     sx={{ mt: 3, ml: 1 }}
                 >
-                    {activeStep === steps.length - 1
-                        ? "Confirm Details"
-                        : "Next"}
+                    {"Confirm Details"}
                 </Button>
             </Box>
         </Box>

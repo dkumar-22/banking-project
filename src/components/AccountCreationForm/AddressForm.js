@@ -7,10 +7,24 @@ import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 
-export default function AddressForm({ details, handleDetails, handleNext, handleBack, steps, activeStep }) {
+export default function AddressForm({
+    details,
+    handleDetails,
+    handleNext,
+    handleBack,
+    steps,
+    activeStep,
+}) {
     const [checked, setChecked] = useState(false);
     return (
-        <Box component="form">
+        <Box
+            component="form"
+            noValidate
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleNext();
+            }}
+        >
             <React.Fragment>
                 <Typography variant="h6" gutterBottom>
                     Personal Information
@@ -245,21 +259,12 @@ export default function AddressForm({ details, handleDetails, handleNext, handle
                         justifyContent: "flex-end",
                     }}
                 >
-                    {activeStep !== 0 && (
-                        <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
-                            Back
-                        </Button>
-                    )}
-
                     <Button
                         type="submit"
                         variant="contained"
-                        onSubmit={handleNext}
                         sx={{ mt: 3, ml: 1 }}
                     >
-                        {activeStep === steps.length - 1
-                            ? "Confirm Details"
-                            : "Next"}
+                        { "Next"}
                     </Button>
                 </Box>
             </React.Fragment>

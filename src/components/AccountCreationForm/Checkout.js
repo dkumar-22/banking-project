@@ -68,10 +68,10 @@ export default function Checkout() {
                     <AddressForm
                         details={details}
                         handleDetails={handleDetails}
-                        steps = {steps}
-                        activeStep = {activeStep}
-                        handleNext = {handleNext}
-                        handleBack = {handleBack}
+                        steps={steps}
+                        activeStep={activeStep}
+                        handleNext={handleNext}
+                        handleBack={handleBack}
                     />
                 );
             case 1:
@@ -79,11 +79,18 @@ export default function Checkout() {
                     <PaymentForm
                         details={details}
                         handleDetails={handleDetails}
+                        handleNext={handleNext}
+                        handleBack={handleBack}
                     />
                 );
             case 2:
                 return (
-                    <Review details={details} handleDetails={handleDetails} />
+                    <Review
+                        details={details}
+                        handleDetails={handleDetails}
+                        handleNext={handleNext}
+                        handleBack={handleBack}
+                    />
                 );
             default:
                 throw new Error("Unknown step");
@@ -93,12 +100,11 @@ export default function Checkout() {
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = (e) => {
-        e.preventDefault();
         setActiveStep(activeStep + 1);
     };
 
     const handleBack = (e) => {
-        e.preventDefault();
+        console.log(activeStep);
         setActiveStep(activeStep - 1);
     };
 

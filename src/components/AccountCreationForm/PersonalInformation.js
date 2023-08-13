@@ -24,6 +24,7 @@ export default function PaymentForm({
                             required
                             id="aadharInformation"
                             label="Aadhar Number"
+                            name="aadharno"
                             fullWidth
                             autoComplete="cc-name"
                             variant="standard"
@@ -36,6 +37,7 @@ export default function PaymentForm({
                             required
                             id="PANCardNumber"
                             label="PAN Card number"
+                            name="pan"
                             fullWidth
                             autoComplete="cc-number"
                             variant="standard"
@@ -48,6 +50,7 @@ export default function PaymentForm({
                             required
                             id="expDate"
                             label="Occupation"
+                            name="occupation"
                             fullWidth
                             autoComplete="cc-exp"
                             variant="standard"
@@ -60,6 +63,7 @@ export default function PaymentForm({
                             required
                             id="phone"
                             label="Phone Number"
+                            name="phone"
                             fullWidth
                             autoComplete="cc-csc"
                             variant="standard"
@@ -75,20 +79,18 @@ export default function PaymentForm({
                     justifyContent: "flex-end",
                 }}
             >
-                {activeStep !== 0 && (
+                {
                     <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                         Back
                     </Button>
-                )}
+                }
 
                 <Button
                     variant="contained"
                     onClick={handleNext}
                     sx={{ mt: 3, ml: 1 }}
                 >
-                    {activeStep === steps.length - 1
-                        ? "Confirm Details"
-                        : "Next"}
+                    {"Next"}
                 </Button>
             </Box>
         </Box>
