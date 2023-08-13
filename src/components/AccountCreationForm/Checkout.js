@@ -28,7 +28,7 @@ function Copyright() {
   );
 }
 
-const steps = ['Addrees Information', 'Account Holder Information', 'Review'];
+const steps = ['Address Information', 'Account Holder Information', 'Review'];
 
 function getStepContent(step) {
   switch (step) {

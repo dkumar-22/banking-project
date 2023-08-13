@@ -29,29 +29,35 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get("email"),
-            password: data.get("password"),
-        });
-    };
-
-
-    const [errorMessage, setErrorMessage] = useState('')
-  
+    const [errorMessage, setErrorMessage] = useState([])
     const validate = (value) => {
-  
+
         if (validator.isStrongPassword(value, {
             minLength: 8, minLowercase: 1,
             minUppercase: 1, minNumbers: 1, minSymbols: 1
         })) {
-            setErrorMessage('Is Strong Password')
+            setErrorMessage([1, 'Is Strong Password'])
         } else {
-            setErrorMessage('Is Not Strong Password')
+            setErrorMessage([0, 'Is Not Strong Password'])
         }
     }
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const submitVar = ({
+            customerID: data.get("customerID"),
+            password: data.get("password"),
+            cpassword: data.get("confirm-password")
+        });
+
+        if (submitVar.password !== submitVar.cpassword) { alert("Passwords Do not match") }
+        else if (errorMessage[0]===0) { alert("Password is not strong enough") }
+
+        else console.log(submitVar)
+
+    };
+
+
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -117,8 +123,20 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                    onChange={(e) => validate(e.target.value)}
                                 />
                             </Grid>
+
+                            {
+                                errorMessage !== '' &&
+                                (errorMessage[0] === 0 ? <Grid item xs={12} style={{ margin: "0px" }}>
+                                    <h6 style={{ margin: "0px 12px", color: "red" }}>{errorMessage[1]}</h6>
+                                </Grid> : <Grid item xs={12} style={{ margin: "0px" }}>
+                                    <h6 style={{ margin: "0px 12px", color: "green" }}>{errorMessage[1]}</h6>
+                                </Grid>)
+
+                            }
+
                             <Grid item xs={12}>
                                 <TextField
                                     required
@@ -150,6 +168,6 @@ export default function SignUp() {
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }

@@ -36,13 +36,13 @@ export default function PaymentForm() {
           <TextField
             required
             id="expDate"
-            label="Expiry date"
+            label="Occupation"
             fullWidth
             autoComplete="cc-exp"
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        {/* <Grid item xs={12} md={6}>
           <TextField
             required
             id="cvv"
@@ -52,13 +52,13 @@ export default function PaymentForm() {
             autoComplete="cc-csc"
             variant="standard"
           />
-        </Grid>
-        <Grid item xs={12}>
+        </Grid> */}
+        {/* <Grid item xs={12}>
           <FormControlLabel
             control={<Checkbox color="secondary" name="saveCard" value="yes" />}
             label="Remember credit card details for next time"
           />
-        </Grid>
+        </Grid> */}
       </Grid>
     </React.Fragment>
   );

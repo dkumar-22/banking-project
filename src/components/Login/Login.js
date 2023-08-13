@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import axios from "axios"
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -34,10 +34,11 @@ export default function SignInSide() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+    const sVar = ({
+      customerID: data.get('customerID'),
       password: data.get('password'),
     });
+    axios.post("http://localhost:5000/user/login", sVar).then((res) => console.log(res)).catch((e) => console.log(e))
   };
 
   return (
@@ -79,10 +80,10 @@ export default function SignInSide() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="customerID"
                 label="Customer ID/Bank Account Number"
-                name="email"
-                autoComplete="email"
+                name="customerID"
+                autoComplete="customerID"
                 autoFocus
               />
               <TextField
@@ -106,14 +107,14 @@ export default function SignInSide() {
               <Grid container>
                 <Grid item xs>
                   <Link href="/recover/password" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item xs>
+                    Forgot Password?
+                  </Link><br />
                   <Link href="/recover/username" variant="body2">
                     Forgot Username?
                   </Link>
                 </Grid>
+
+
                 <Grid item>
                   <Link href="/register" variant="body2">
                     {"Don't have an account? Sign Up"}
