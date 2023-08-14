@@ -12,7 +12,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import validator from 'validator'
 import { useState } from "react";
-
+import axios from "axios"
 function Copyright(props) {
     return (
         <Typography
@@ -47,13 +47,31 @@ export default function SignUp() {
         const submitVar = ({
             customerID: data.get("customerID"),
             password: data.get("password"),
-            cpassword: data.get("confirm-password")
+            cpassword: data.get("confirm-password"),
+            firstName: data.get("firstName"),
+            lastName: data.get("lastName"),
+            email: data.get("email")
         });
 
         if (submitVar.password !== submitVar.cpassword) { alert("Passwords Do not match") }
-        else if (errorMessage[0]===0) { alert("Password is not strong enough") }
+        else if (errorMessage[0] === 0) { alert("Password is not strong enough") }
 
-        else console.log(submitVar)
+        else {
+            axios.post("http://localhost:8080/api/v1/sendCustomer",
+                {
+                    "address": "ABC",
+                    "firstName": submitVar.firstName,
+                    "lastName": submitVar.lastName,
+                    "contactNo": "99999999",
+                    "dob": 123423,
+                    "password": submitVar.password,
+                    "customerID": submitVar.customerID,
+                    "email": submitVar.email
+                }
+
+
+            ).then((res) => console.log(res)).catch((e) => console.error(e))
+        }
 
     };
 
@@ -118,6 +136,16 @@ export default function SignUp() {
                                 <TextField
                                     required
                                     fullWidth
+                                    id="email"
+                                    label="Email"
+                                    name="email"
+                                    autoComplete="email"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
                                     name="password"
                                     label="Password"
                                     type="password"
@@ -143,6 +171,28 @@ export default function SignUp() {
                                     fullWidth
                                     name="confirm-password"
                                     label="Confirm Password"
+                                    type="password"
+                                    id="confirm-password"
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="transaction-password"
+                                    label="Transaction Password"
+                                    type="password"
+                                    id="confirm-password"
+                                    autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    name="confirm-transaction-password"
+                                    label="Confirm Transaction Password"
                                     type="password"
                                     id="confirm-password"
                                     autoComplete="new-password"

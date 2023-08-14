@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import CameraIcon from '@mui/icons-material/PhotoCamera';
@@ -15,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -35,6 +37,9 @@ const cards = [1, 2, 3];
 const defaultTheme = createTheme();
 
 export default function Album() {
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/v1/customers").then((res) => console.log(res)).catch((e) => console.error(e))
+  }, [])
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
@@ -86,25 +91,25 @@ export default function Album() {
         </Box>
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
-          
-            <Grid item xs={4}><Typography variant="h4" align="center" paragraph color="black">
-              Don't have an account ?
-            </Typography></Grid>
-            <Grid item xs={4}> <Typography variant="p" align="center" paragraph color="black">
-              Easily Create an account using our online account creation tool
-            </Typography></Grid>
+
+          <Grid item xs={4}><Typography variant="h4" align="center" paragraph color="black">
+            Don't have an account ?
+          </Typography></Grid>
+          <Grid item xs={4}> <Typography variant="p" align="center" paragraph color="black">
+            Easily Create an account using our online account creation tool
+          </Typography></Grid>
 
 
-            <Stack
-              sx={{ pt: 0 }}
-              direction="row"
-              spacing={2}
-              justifyContent="center"
-            >
-              <Link href="/apply"><Button variant="contained" style={{ color: "white", backgroundColor: '#CD1409', borderRadius: "25px" }}>Apply for a Bank Account</Button></Link>
-              
-            </Stack>
-          
+          <Stack
+            sx={{ pt: 0 }}
+            direction="row"
+            spacing={2}
+            justifyContent="center"
+          >
+            <Link href="/apply"><Button variant="contained" style={{ color: "white", backgroundColor: '#CD1409', borderRadius: "25px" }}>Apply for a Bank Account</Button></Link>
+
+          </Stack>
+
         </Container>
       </main>
 

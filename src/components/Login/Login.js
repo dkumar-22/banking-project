@@ -96,7 +96,8 @@ export default function SignInSide() {
                 id="password"
                 autoComplete="current-password"
               />
-              <Button
+              {/* <Link href="/dashboard" variant="body2"> */}
+                <Button
                 type="submit"
                 fullWidth
                 variant="contained"
@@ -104,6 +105,8 @@ export default function SignInSide() {
               >
                 Sign In
               </Button>
+              {/* </Link> */}
+              
               <Grid container>
                 <Grid item xs>
                   <Link href="/recover/password" variant="body2">
