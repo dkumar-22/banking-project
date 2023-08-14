@@ -101,6 +101,9 @@ export default function Checkout() {
 
     const handleNext = (e) => {
         setActiveStep(activeStep + 1);
+        if(activeStep===steps.length)
+          console.log(details)
+          //upload request will also incorporated here
     };
 
     const handleBack = (e) => {
@@ -113,16 +116,16 @@ export default function Checkout() {
             <CssBaseline />
             <AppBar
                 position="absolute"
-                color="default"
                 elevation={0}
                 sx={{
                     position: "relative",
-                    borderBottom: (t) => `1px solid ${t.palette.divider}`,
+                    borderBottom: `2px solid yellow`,
+                    backgroundColor: '#CD1409'
                 }}
             >
                 <Toolbar>
-                    <Typography variant="h6" color="inherit" noWrap>
-                        Bank Application
+                    <Typography variant="h6" color="inherit" noWrap style={{ color: "white", fontFamily: "Clarendon", fontWeight: "700", fontSize: "1.5em", marginLeft: "10px", letterSpacing: "0.5px", wordSpacing: "3px" }}>
+                       WELLS FARGO
                     </Typography>
                 </Toolbar>
             </AppBar>

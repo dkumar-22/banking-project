@@ -81,19 +81,10 @@ export default function Review({
                                 secondary={product.desc}
                             />
                             <Typography variant="body2">
-                                {product.price}
+                                {product.price===''?'-':product.price}
                             </Typography>
                         </ListItem>
                     ))}
-                    <ListItem sx={{ py: 1, px: 0 }}>
-                        <ListItemText primary="Total" />
-                        <Typography
-                            variant="subtitle1"
-                            sx={{ fontWeight: 700 }}
-                        >
-                            $34.06
-                        </Typography>
-                    </ListItem>
                 </List>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6}>

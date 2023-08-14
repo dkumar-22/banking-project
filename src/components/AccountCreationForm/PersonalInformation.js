@@ -70,6 +70,17 @@ export default function PaymentForm({
                             value={details.phone}
                             onChange={handleDetails}
                         />
+                        <TextField
+                            required
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            fullWidth
+                            autoComplete="email"
+                            variant="standard"
+                            value={details.email}
+                            onChange={handleDetails}
+                        />
                     </Grid>
                 </Grid>
             </React.Fragment>
