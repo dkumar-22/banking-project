@@ -18,27 +18,29 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        flexGrow: 1,
-        padding: theme.spacing(3),
-        transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        marginLeft: `-${drawerWidth}px`,
-        ...(open && {
-            transition: theme.transitions.create('margin', {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-            marginLeft: 0,
-        }),
-    }),
-);
+// const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+//     ({ theme, open }) => ({
+//         flexGrow: 1,
+//         padding: theme.spacing(3),
+//         transition: theme.transitions.create('margin', {
+//             easing: theme.transitions.easing.sharp,
+//             duration: theme.transitions.duration.leavingScreen,
+//         }),
+//         marginLeft: `-${drawerWidth}px`,
+//         ...(open && {
+//             transition: theme.transitions.create('margin', {
+//                 easing: theme.transitions.easing.easeOut,
+//                 duration: theme.transitions.duration.enteringScreen,
+//             }),
+//             marginLeft: 0,
+//         }),
+//     }),
+// );
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -79,7 +81,7 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex'}}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>
@@ -142,15 +144,6 @@ export default function PersistentDrawerLeft() {
                     ))}
                 </List>
             </Drawer>
-            <Main open={open}>
-                <DrawerHeader />
-                <Typography paragraph>
-                    This is where the data will be.
-                </Typography>
-                <Typography paragraph>
-                    This is where the Data will be
-                </Typography>
-            </Main>
         </Box>
     );
 }

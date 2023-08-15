@@ -28,7 +28,13 @@ function Copyright(props) {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#B04040",
+    },
+  },
+});
 
 export default function SignIn() {
   const handleSubmit = (event) => {
@@ -52,7 +58,7 @@ export default function SignIn() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "#B04040" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

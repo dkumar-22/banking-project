@@ -14,6 +14,7 @@ import Typography from "@mui/material/Typography";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PersonalInformation";
 import Review from "./Review";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Copyright() {
     return (
@@ -29,6 +30,14 @@ function Copyright() {
 }
 
 const steps = ["Address Information", "Account Holder Information", "Review"];
+
+const defaultTheme = createTheme({
+    palette: {
+        primary: {
+            main: "#B04040",
+        },
+    },
+});
 
 export default function Checkout() {
     const [details, setDetails] = useState({
@@ -101,9 +110,8 @@ export default function Checkout() {
 
     const handleNext = (e) => {
         setActiveStep(activeStep + 1);
-        if(activeStep===steps.length)
-          console.log(details)
-          //upload request will also incorporated here
+        if (activeStep === steps.length) console.log(details);
+        //upload request will also incorporated here
     };
 
     const handleBack = (e) => {
@@ -112,55 +120,70 @@ export default function Checkout() {
     };
 
     return (
-        <React.Fragment>
-            <CssBaseline />
-            <AppBar
-                position="absolute"
-                elevation={0}
-                sx={{
-                    position: "relative",
-                    borderBottom: `2px solid yellow`,
-                    backgroundColor: '#CD1409'
-                }}
-            >
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" noWrap style={{ color: "white", fontFamily: "Clarendon", fontWeight: "700", fontSize: "1.5em", marginLeft: "10px", letterSpacing: "0.5px", wordSpacing: "3px" }}>
-                       WELLS FARGO
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-                <Paper
-                    variant="outlined"
-                    sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+        <ThemeProvider theme={defaultTheme}>
+            <React.Fragment>
+                <CssBaseline />
+                <AppBar
+                    position="absolute"
+                    elevation={0}
+                    sx={{
+                        position: "relative",
+                        borderBottom: `2px solid yellow`,
+                        backgroundColor: "#CD1409",
+                    }}
                 >
-                    <Typography component="h1" variant="h4" align="center">
-                        Open a Bank Account
-                    </Typography>
-                    <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    {activeStep === steps.length ? (
-                        <React.Fragment>
-                            <Typography variant="h5" gutterBottom>
-                                Thank you for your trust.
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                Details Added Successfully
-                            </Typography>
-                        </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                            {getStepContent(activeStep)}
-                        </React.Fragment>
-                    )}
-                </Paper>
-                <Copyright />
-            </Container>
-        </React.Fragment>
+                    <Toolbar>
+                        <Typography
+                            variant="h6"
+                            color="inherit"
+                            noWrap
+                            style={{
+                                color: "white",
+                                fontFamily: "Clarendon",
+                                fontWeight: "700",
+                                fontSize: "1.5em",
+                                marginLeft: "10px",
+                                letterSpacing: "0.5px",
+                                wordSpacing: "3px",
+                            }}
+                        >
+                            WELLS FARGO
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+                    <Paper
+                        variant="outlined"
+                        sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+                    >
+                        <Typography component="h1" variant="h4" align="center">
+                            Open a Bank Account
+                        </Typography>
+                        <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+                            {steps.map((label) => (
+                                <Step key={label}>
+                                    <StepLabel>{label}</StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                        {activeStep === steps.length ? (
+                            <React.Fragment>
+                                <Typography variant="h5" gutterBottom>
+                                    Thank you for your trust.
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    Details Added Successfully
+                                </Typography>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                {getStepContent(activeStep)}
+                            </React.Fragment>
+                        )}
+                    </Paper>
+                    <Copyright />
+                </Container>
+            </React.Fragment>
+        </ThemeProvider>
     );
 }

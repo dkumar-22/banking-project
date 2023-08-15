@@ -10,9 +10,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import validator from 'validator'
+import validator from "validator";
 import { useState } from "react";
-import axios from "axios"
+import axios from "axios";
 function Copyright(props) {
     return (
         <Typography
@@ -26,56 +26,63 @@ function Copyright(props) {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme({
+    palette: {
+        primary: {
+            main: "#B04040",
+        },
+    },
+});
 
 export default function SignUp() {
-    const [errorMessage, setErrorMessage] = useState([])
+    const [errorMessage, setErrorMessage] = useState([]);
     const validate = (value) => {
-
-        if (validator.isStrongPassword(value, {
-            minLength: 8, minLowercase: 1,
-            minUppercase: 1, minNumbers: 1, minSymbols: 1
-        })) {
-            setErrorMessage([1, 'Is Strong Password'])
+        if (
+            validator.isStrongPassword(value, {
+                minLength: 8,
+                minLowercase: 1,
+                minUppercase: 1,
+                minNumbers: 1,
+                minSymbols: 1,
+            })
+        ) {
+            setErrorMessage([1, "Is Strong Password"]);
         } else {
-            setErrorMessage([0, 'Is Not Strong Password'])
+            setErrorMessage([0, "Is Not Strong Password"]);
         }
-    }
+    };
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        const submitVar = ({
+        const submitVar = {
             customerID: data.get("customerID"),
             password: data.get("password"),
             cpassword: data.get("confirm-password"),
             firstName: data.get("firstName"),
             lastName: data.get("lastName"),
-            email: data.get("email")
-        });
+            email: data.get("email"),
+        };
 
-        if (submitVar.password !== submitVar.cpassword) { alert("Passwords Do not match") }
-        else if (errorMessage[0] === 0) { alert("Password is not strong enough") }
-
-        else {
-            axios.post("http://localhost:8080/api/v1/sendCustomer",
-                {
-                    "address": "ABC",
-                    "firstName": submitVar.firstName,
-                    "lastName": submitVar.lastName,
-                    "contactNo": "99999999",
-                    "dob": 123423,
-                    "password": submitVar.password,
-                    "customerID": submitVar.customerID,
-                    "email": submitVar.email
-                }
-
-
-            ).then((res) => console.log(res)).catch((e) => console.error(e))
+        if (submitVar.password !== submitVar.cpassword) {
+            alert("Passwords Do not match");
+        } else if (errorMessage[0] === 0) {
+            alert("Password is not strong enough");
+        } else {
+            axios
+                .post("http://localhost:8080/api/v1/sendCustomer", {
+                    address: "ABC",
+                    firstName: submitVar.firstName,
+                    lastName: submitVar.lastName,
+                    contactNo: "99999999",
+                    dob: 123423,
+                    password: submitVar.password,
+                    customerID: submitVar.customerID,
+                    email: submitVar.email,
+                })
+                .then((res) => console.log(res))
+                .catch((e) => console.error(e));
         }
-
     };
-
-
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -89,7 +96,7 @@ export default function SignUp() {
                         alignItems: "center",
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                    <Avatar sx={{ m: 1, bgcolor: "#B04040" }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -155,15 +162,38 @@ export default function SignUp() {
                                 />
                             </Grid>
 
-                            {
-                                errorMessage !== '' &&
-                                (errorMessage[0] === 0 ? <Grid item xs={12} style={{ margin: "0px" }}>
-                                    <h6 style={{ margin: "0px 12px", color: "red" }}>{errorMessage[1]}</h6>
-                                </Grid> : <Grid item xs={12} style={{ margin: "0px" }}>
-                                    <h6 style={{ margin: "0px 12px", color: "green" }}>{errorMessage[1]}</h6>
-                                </Grid>)
-
-                            }
+                            {errorMessage !== "" &&
+                                (errorMessage[0] === 0 ? (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        style={{ margin: "0px" }}
+                                    >
+                                        <h6
+                                            style={{
+                                                margin: "0px 12px",
+                                                color: "red",
+                                            }}
+                                        >
+                                            {errorMessage[1]}
+                                        </h6>
+                                    </Grid>
+                                ) : (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        style={{ margin: "0px" }}
+                                    >
+                                        <h6
+                                            style={{
+                                                margin: "0px 12px",
+                                                color: "green",
+                                            }}
+                                        >
+                                            {errorMessage[1]}
+                                        </h6>
+                                    </Grid>
+                                ))}
 
                             <Grid item xs={12}>
                                 <TextField
@@ -218,6 +248,6 @@ export default function SignUp() {
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>
-        </ThemeProvider >
+        </ThemeProvider>
     );
 }
