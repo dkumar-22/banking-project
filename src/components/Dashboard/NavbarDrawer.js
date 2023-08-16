@@ -24,24 +24,24 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const drawerWidth = 240;
 
-// const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-//     ({ theme, open }) => ({
-//         flexGrow: 1,
-//         padding: theme.spacing(3),
-//         transition: theme.transitions.create('margin', {
-//             easing: theme.transitions.easing.sharp,
-//             duration: theme.transitions.duration.leavingScreen,
-//         }),
-//         marginLeft: `-${drawerWidth}px`,
-//         ...(open && {
-//             transition: theme.transitions.create('margin', {
-//                 easing: theme.transitions.easing.easeOut,
-//                 duration: theme.transitions.duration.enteringScreen,
-//             }),
-//             marginLeft: 0,
-//         }),
-//     }),
-// );
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: `-${drawerWidth}px`,
+        ...(open && {
+            transition: theme.transitions.create('margin', {
+                easing: theme.transitions.easing.easeOut,
+                duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+        }),
+    }),
+);
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
@@ -134,8 +134,8 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {[{ name: 'Account Details', link: "/" }, { name: 'Account Summary', link: "/summary" }, { name: 'Account Statement', link: "/" }].map((text, index) => (
-                        <Link href={text.link}>
+                    {[{ name: 'Account Details', link: "/dashboard" }, { name: 'Account Summary', link: "/summary" }, { name: 'Account Statement', link: "/statement" }, { name: 'Beneficiaries', link: "/beneficiaries" }].map((text, index) => (
+                        <Link href={text.link} style={{color:"black", textDecoration:"none"}}>
                             <ListItem key={text.name} disablePadding>
                                 <ListItemButton>
                                     <ListItemIcon>
@@ -149,7 +149,7 @@ export default function PersistentDrawerLeft() {
                 <Divider />
                 <List>
                     {[{name:"Add Beneficiary",link:"/beneficiary"},{ name: "IMPS", link: "/imps" }, { name: "NEFT", link: "/neft" }, { name: "RTGS", link: "/rtgs" }, { name: 'Change Password', link: "/change-password" }].map((text, index) => (
-                        <Link href={text.link}>
+                        <Link href={text.link} style={{color:"black", textDecoration:"none"}}>
                             <ListItem key={text.name} disablePadding>
                                 <ListItemButton>
                                     <ListItemIcon>

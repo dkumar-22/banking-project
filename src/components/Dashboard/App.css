@@ -1,0 +1,31 @@
+.container {
+    margin-top: 20px;
+  }
+  
+  .dashboard-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .card {
+    flex: 1;
+  }
+  
+  .transactions-card {
+    flex: 2;
+  }
+  
+  .balance-text {
+    color: #2ecc71;
+    font-weight: bold;
+  }
+  
+  .text-red-500 {
+    color: #e74c3c;
+  }
+  
+  .text-green-500 {
+    color: #2ecc71;
+  }
+  
