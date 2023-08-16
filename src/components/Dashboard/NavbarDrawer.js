@@ -18,7 +18,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Link } from '@mui/material';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
 const drawerWidth = 240;
@@ -57,6 +58,7 @@ const AppBar = styled(MuiAppBar, {
             duration: theme.transitions.duration.enteringScreen,
         }),
     }),
+    backgroundColor: "#CD1409",
 }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -81,7 +83,7 @@ export default function PersistentDrawerLeft() {
     };
 
     return (
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
                 <Toolbar>
@@ -94,8 +96,21 @@ export default function PersistentDrawerLeft() {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Bank Dashboard
+                    <Typography
+                        variant="h6"
+                        color="inherit"
+                        noWrap
+                        style={{
+                            color: "white",
+                            fontFamily: "Clarendon",
+                            fontWeight: "700",
+                            fontSize: "1.5em",
+                            marginLeft: "10px",
+                            letterSpacing: "0.5px",
+                            wordSpacing: "3px",
+                        }}
+                    >
+                        WELLS FARGO
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -119,28 +134,30 @@ export default function PersistentDrawerLeft() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    {['Account Details','Account Summary','Account Statement'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
+                    {[{ name: 'Account Details', link: "/" }, { name: 'Account Summary', link: "/summary" }, { name: 'Account Statement', link: "/" }].map((text, index) => (
+                        <Link href={text.link}>
+                            <ListItem key={text.name} disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text.name} />
+                                </ListItemButton>
+                            </ListItem></Link>
                     ))}
                 </List>
                 <Divider />
                 <List>
-                    {['Funds Transfer'].map((text, index) => (
-                        <ListItem key={text} disablePadding>
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItemButton>
-                        </ListItem>
+                    {[{name:"Add Beneficiary",link:"/beneficiary"},{ name: "IMPS", link: "/imps" }, { name: "NEFT", link: "/neft" }, { name: "RTGS", link: "/rtgs" }, { name: 'Change Password', link: "/change-password" }].map((text, index) => (
+                        <Link href={text.link}>
+                            <ListItem key={text.name} disablePadding>
+                                <ListItemButton>
+                                    <ListItemIcon>
+                                        {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text.name} />
+                                </ListItemButton>
+                            </ListItem></Link>
                     ))}
                 </List>
             </Drawer>
