@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -6,7 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-
+import axios from "axios"
 export default function AddressForm({
     details,
     handleDetails,
@@ -16,6 +16,7 @@ export default function AddressForm({
     activeStep,
 }) {
     const [checked, setChecked] = useState(false);
+
     return (
         <Box
             component="form"
@@ -46,7 +47,6 @@ export default function AddressForm({
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
-                            Kumar
                             id="middleName"
                             name="middleName"
                             label="Middle name"
@@ -147,19 +147,6 @@ export default function AddressForm({
                             onChange={handleDetails}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="country"
-                            name="country"
-                            label="Country"
-                            fullWidth
-                            autoComplete="shipping country"
-                            variant="standard"
-                            value={details.country}
-                            onChange={handleDetails}
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <FormControlLabel
                             control={
@@ -237,19 +224,6 @@ export default function AddressForm({
                                     onChange={handleDetails}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    id="pcountry"
-                                    name="pcountry"
-                                    label="Country"
-                                    fullWidth
-                                    autoComplete="shipping country"
-                                    variant="standard"
-                                    value={details.pcountry}
-                                    onChange={handleDetails}
-                                />
-                            </Grid>
                         </>
                     )}
                 </Grid>
@@ -264,7 +238,7 @@ export default function AddressForm({
                         variant="contained"
                         sx={{ mt: 3, ml: 1 }}
                     >
-                        { "Next"}
+                        {"Next"}
                     </Button>
                 </Box>
             </React.Fragment>

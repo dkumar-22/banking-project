@@ -15,6 +15,7 @@ import AddressForm from "./AddressForm";
 import PaymentForm from "./PersonalInformation";
 import Review from "./Review";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import axios from "axios";
 
 function Copyright() {
     return (
@@ -64,7 +65,6 @@ export default function Checkout() {
 
     function handleDetails(e) {
         const { name, value } = e.target;
-        console.log(details);
         setDetails((prev) => {
             return { ...prev, [name]: value };
         });
@@ -109,8 +109,29 @@ export default function Checkout() {
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = (e) => {
+        
+        if (activeStep === steps.length-1){ console.log(details);
+        const submitObj = {
+            accountNo: details.phone + "00",
+            customerID: details.firstName.toLowerCase().substring(0,3)+details.phone.substring(0,3),
+            firstName: details.firstName,
+            lastName: details.lastName,
+            currentAddress:details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip,
+            permanentAddress:details.paddress1===''?details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip: details.paddress1 + " " + details.paddress2 + " " + details.pcity + " " + details.pstate + " " + details.pzip,
+            phone:details.phone,
+            aadharNo:details.aadharno,
+            panNo:details.pan,
+            dob: details.dob,
+            email: details.email,
+            middleName:details.middleName,
+            minAccountBalance:100000,
+            occupation: details.occupation
+        }
+        console.log(submitObj);
+        axios.post("http://localhost:8080/api/v1/sendUser",submitObj).then((res)=>console.log(res)).catch((e)=>console.error(e));
+        }
+       
         setActiveStep(activeStep + 1);
-        if (activeStep === steps.length) console.log(details);
         //upload request will also incorporated here
     };
 

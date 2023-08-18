@@ -58,9 +58,8 @@ export default function SignUp() {
             customerID: data.get("customerID"),
             password: data.get("password"),
             cpassword: data.get("confirm-password"),
-            firstName: data.get("firstName"),
-            lastName: data.get("lastName"),
-            email: data.get("email"),
+            transactionPassword: data.get('transaction-password'),
+            cTransactionPassword: data.get('confirm-transaction-password')
         };
 
         if (submitVar.password !== submitVar.cpassword) {
