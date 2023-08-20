@@ -13,6 +13,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
+import md5 from "md5-hash";
+import { useDataLayerValue } from "../../ContextAPI/DataLayer";
+import { useNavigate } from "react-router-dom";
+
 function Copyright(props) {
     return (
         <Typography
@@ -42,18 +46,36 @@ const defaultTheme = createTheme({
 });
 
 export default function SignInSide() {
+    let navigate = useNavigate();
+    const [{ logged }, dispatch] = useDataLayerValue();
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const sVar = {
             customerID: data.get("customerID"),
-            password: data.get("password"),
+            password: md5(data.get("password")),
         };
         axios
-            .post("http://localhost:5000/user/login", sVar)
-            .then((res) => console.log(res))
+            .post("http://localhost:8080/api/v1/login", sVar)
+            .then((res) => {
+                if (res.data[0] === "1") {
+                    dispatch({
+                        type: "SET_LOGGED",
+                        logged: true,
+                    });
+                    dispatch({
+                        type: "SET_CUSTOMERID",
+                        customerID: data.get("customerID"),
+                    });
+                } else alert("Invalid Credentials");
+            })
             .catch((e) => console.log(e));
     };
+
+    if (logged) {
+        return navigate("/dashboard");
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>

@@ -118,7 +118,7 @@ export default function Checkout() {
             lastName: details.lastName,
             currentAddress:details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip,
             permanentAddress:details.paddress1===''?details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip: details.paddress1 + " " + details.paddress2 + " " + details.pcity + " " + details.pstate + " " + details.pzip,
-            phone:details.phone,
+            contactNo:details.phone,
             aadharNo:details.aadharno,
             panNo:details.pan,
             dob: details.dob,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 // import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import Input from '../Input'
+import Input from '../Input/Input'
 // import InputArea from './components/InputArea'
 // import InputSelect from './components/InputSelect'
 import  validator  from 'validator'
