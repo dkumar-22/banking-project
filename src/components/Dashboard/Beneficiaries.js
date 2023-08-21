@@ -8,9 +8,9 @@ import {
     TableRow,
     Paper,
     Button,
-    Link,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
+import {Link} from "react-router-dom";
 
 const BeneficiaryTable = () => {
     const [beneficiaries, setBeneficiaries] = useState([
@@ -37,7 +37,7 @@ const BeneficiaryTable = () => {
 
     return (
         <div style={{ marginTop: "100px", padding: "20px" }}>
-            <Link href="/beneficiary">
+            <Link to="/beneficiary">
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}

@@ -10,32 +10,12 @@ import { useState } from "react";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
-
+import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 
 export default function Review({
 }) {
 
-    const [details, setDetails] = useState({
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zip: "",
-        paddress1: "",
-        paddress2: "",
-        pcity: "",
-        pstate: "",
-        pzip: "",
-        aadharno: "",
-        pan: "",
-        occupation: "",
-        dob: "",
-    });
+    const [{details},dispatch] = useDataLayerValue();
 
     const products = [
         {
@@ -53,15 +33,15 @@ export default function Review({
         },
         {
             name: "Phone Number",
-            price: details.phone,
+            price: details.contactNo,
         },
         {
             name: "Aadhar Number",
-            price: details.aadharno,
+            price: details.aadharNo,
         },
         {
             name: "PAN Card Number",
-            price: details.pan,
+            price: details.panNo,
         },
         {
             name: "Occupation",
@@ -98,7 +78,7 @@ export default function Review({
             >
                 <Box component="form">
                     <React.Fragment>
-                        <Typography variant="h6" gutterBottom>
+                        <Typography variant="h6" gutterBottom style={{textAlign:"center"}}>
                             Account Summary
                         </Typography>
                         <List disablePadding>
@@ -120,7 +100,7 @@ export default function Review({
                                     Current Address
                                 </Typography>
                                 <Typography gutterBottom>
-                                    {addresses.join(", ")}
+                                    {details.currentAddress}
                                 </Typography>
                             </Grid>
                             <Grid item container direction="column" xs={12} sm={6}>
@@ -128,7 +108,7 @@ export default function Review({
                                     Permanent Address
                                 </Typography>
                                 <Typography gutterBottom>
-                                    {paddresses.join(", ")}
+                                    {details.permanentAddress}
                                 </Typography>
                             </Grid>
                         </Grid>

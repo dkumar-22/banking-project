@@ -68,7 +68,7 @@ const BankDashboard = () => {
                             Available Balance
                         </Typography>
                         <Typography variant="h4" className="balance-text">
-                            ${balance.toFixed(2)}
+                            ₹{details.minAccountBalance}
                         </Typography>
                     </CardContent>
                 </Card>

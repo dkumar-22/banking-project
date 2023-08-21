@@ -49,6 +49,7 @@ export default function Checkout() {
         phone: "",
         address1: "",
         address2: "",
+        minAccountBalance:0,
         city: "",
         state: "",
         zip: "",
@@ -124,7 +125,7 @@ export default function Checkout() {
             dob: details.dob,
             email: details.email,
             middleName:details.middleName,
-            minAccountBalance:100000,
+            minAccountBalance:details.minAccountBalance,
             occupation: details.occupation
         }
         console.log(submitObj);

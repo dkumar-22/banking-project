@@ -70,6 +70,8 @@ export default function PaymentForm({
                             value={details.phone}
                             onChange={handleDetails}
                         />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
                         <TextField
                             required
                             id="email"
@@ -79,6 +81,18 @@ export default function PaymentForm({
                             autoComplete="email"
                             variant="standard"
                             value={details.email}
+                            onChange={handleDetails}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            required
+                            id="minAmountBalance"
+                            label="Enter Amount to Start With"
+                            name="minAccountBalance"
+                            fullWidth
+                            variant="standard"
+                            value={details.minAmountBalance}
                             onChange={handleDetails}
                         />
                     </Grid>
