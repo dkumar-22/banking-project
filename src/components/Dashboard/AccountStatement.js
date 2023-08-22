@@ -1,176 +1,207 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { Grid,TextField,Button } from "@mui/material";
+import React, { useEffect } from "react";
+import "./App.css";
+import {
+    Container,
+    Card,
+    CardContent,
+    Typography,
+    TableContainer,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+} from "@mui/material";
+import { Grid, TextField, Button } from "@mui/material";
+import { useDataLayerValue } from "../../ContextAPI/DataLayer";
+import axios from "axios";
 
-const columns = [
-  { id: "name", label: "Name", minWidth: 170 },
-  { id: "code", label: "ISO\u00a0Code", minWidth: 100 },
-  {
-    id: "population",
-    label: "Population",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "size",
-    label: "Size\u00a0(km\u00b2)",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "density",
-    label: "Density",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toFixed(2),
-  },
-];
+const BankDashboard = () => {
+    const [{ logged, customerID, details }, dispatch] = useDataLayerValue();
+    const [transactions, setTransactions] = React.useState([]);
+    const [credits, setCredits] = React.useState([]);
+    const [toDate, setToDate] = React.useState("");
+    const [fromDate, setFromDate] = React.useState("");
+    useEffect(() => {
+        axios
+            .get("http://localhost:8080/api/v1/get/user/" + customerID)
+            .then((res) => {
+                console.log(res.data);
+                dispatch({
+                    type: "SET_DETAILS",
+                    details: res.data,
+                });
+            });
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/debit/" +
+                    details.accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setTransactions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/credit/" +
+                    details.accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setCredits(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+    var i = 0;
+    console.log(logged);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(fromDate);
+        console.log(toDate);
+        console.log(`http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`)
+        axios
+            .get(
+                `http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`
+            )
+            .then((res) => {
+                console.log("Data", res.data);
+                setTransactions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    return (
+        <Container maxWidth="lg" className="container">
+            <div style={{ marginTop: "100px", padding: "30px" }}>
+                <Grid
+                    component="form"
+                    onSubmit={handleSubmit}
+                    container
+                    spacing={2}
+                >
+                    <Grid item xs={4}>
+                        <TextField
+                            label="From Date"
+                            //value={fromAccount}
+                            //onChange={(e) => setFromAccount(e.target.value)}
+                            fullWidth
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            style={{ padding: "10px" }}
+                            name="fromDate"
+                            required
+                            onChange={(e) => setFromDate(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <TextField
+                            label="To Date"
+                            //value={fromAccount}
+                            //onChange={(e) => setFromAccount(e.target.value)}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            type="date"
+                            style={{ padding: "10px" }}
+                            name="toDate"
+                            required
+                            onChange={(e) => setToDate(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <Button
+                            //onClick={setIsPressed(true)}
+                            variant="contained"
+                            type="submit"
+                            sx={{ mt: 2, mb: 2 }}
+                        >
+                            Go
+                        </Button>
+                    </Grid>
+                </Grid>
+            </div>
+
+            <Card className="card transactions-card">
+                <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                        Recent Transactions
+                    </Typography>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Transaction Type</TableCell>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell align="right">Amount</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions.map((transaction, idx) => (
+                                    <TableRow key={idx}>
+                                        <TableCell>{++i}</TableCell>
+                                        <TableCell>
+                                            {transaction.transactionType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.transDate}
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            className="text-red-500"
+                                        >
+                                            {"- "}₹
+                                            {Math.abs(
+                                                transaction.amount.toFixed(2)
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableBody>
+                                {credits.map((transaction, idx) => (
+                                    <TableRow key={idx}>
+                                        <TableCell>{++i}</TableCell>
+                                        <TableCell>
+                                            {transaction.transactionType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.transDate}
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            className="text-green-500"
+                                        >
+                                            {"+ "}₹
+                                            {Math.abs(
+                                                transaction.amount.toFixed(2)
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
+        </Container>
+    );
+};
+
+function App() {
+    return (
+        <div className="App" style={{ marginTop: "100px" }}>
+            <BankDashboard />
+        </div>
+    );
 }
 
-const rows = [
-  createData("India", "IN", 1324171354, 3287263),
-  createData("China", "CN", 1403500365, 9596961),
-  createData("Italy", "IT", 60483973, 301340),
-  createData("United States", "US", 327167434, 9833520),
-  createData("Canada", "CA", 37602103, 9984670),
-  createData("Australia", "AU", 25475400, 7692024),
-  createData("Germany", "DE", 83019200, 357578),
-  createData("Ireland", "IE", 4857000, 70273),
-  createData("Mexico", "MX", 126577691, 1972550),
-  createData("Japan", "JP", 126317000, 377973),
-  createData("France", "FR", 67022000, 640679),
-  createData("United Kingdom", "GB", 67545757, 242495),
-  createData("Russia", "RU", 146793744, 17098246),
-  createData("Nigeria", "NG", 200962417, 923768),
-  createData("Brazil", "BR", 210147125, 8515767),
-];
-
-export default function AccountStatement() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [isPressed,setIsPressed] = React.useState(false);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
-  return (
-    <>
-      <div style={{marginTop:"100px", padding:"30px"}}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <TextField
-              label="From Date"
-              //value={fromAccount}
-              //onChange={(e) => setFromAccount(e.target.value)}
-              fullWidth
-              type="date"
-              InputLabelProps={{ shrink: true }}
-              style={{ padding: "10px" }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <TextField
-              label="To Date"
-              //value={fromAccount}
-              //onChange={(e) => setFromAccount(e.target.value)}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              type="date"
-              style={{ padding: "10px" }}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Button
-              //onClick={setIsPressed(true)}
-              variant="contained"
-              sx={{ mt: 2, mb: 2 }}
-            >
-              Go
-            </Button>
-          </Grid>
-        </Grid>
-      </div>
-
-      <Paper sx={{ width: "100%" }}>
-        <TableContainer sx={{ maxHeight:  "20%", padding: "50px" }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" colSpan={2}>
-                  Country
-                </TableCell>
-                <TableCell align="center" colSpan={3}>
-                  Details
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    key={column.id}
-                    align={column.align}
-                    style={{ top: 57, minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.code}
-                    >
-                      {columns.map((column) => {
-                        const value = row[column.id];
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </>
-  );
-}
+export default App;

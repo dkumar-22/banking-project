@@ -49,6 +49,18 @@ export default function SignInSide() {
     let navigate = useNavigate();
     const [{ logged }, dispatch] = useDataLayerValue();
 
+    // useEffect(() => {
+    //     axios
+    //         .get("http://localhost:8080/api/v1/get/user/" + customerID)
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             dispatch({
+    //                 type: "SET_DETAILS",
+    //                 details: res.data,
+    //             });
+    //         });
+    // }, []);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -71,6 +83,16 @@ export default function SignInSide() {
                 } else alert("Invalid Credentials");
             })
             .catch((e) => console.log(e));
+
+        axios
+            .get("http://localhost:8080/api/v1/get/user/" + sVar.customerID)
+            .then((res) => {
+                console.log(res.data);
+                dispatch({
+                    type: "SET_DETAILS",
+                    details: res.data,
+                });
+            });
     };
 
     if (logged) {

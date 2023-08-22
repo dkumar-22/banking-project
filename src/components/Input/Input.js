@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Input = ({ label, name, type, value, required, placeholder, handleFunction }) => {
+const Input = ({ label, name, type, value, required, placeholder, handleFunction, disabled }) => {
     return (
         <>
             <label htmlFor={name} className="block text-sm font-medium leading-6 text-gray-900">
@@ -15,6 +15,8 @@ const Input = ({ label, name, type, value, required, placeholder, handleFunction
                     placeholder={placeholder}
                     onChange={handleFunction}
                     required={required}
+                    disabled={disabled}
+                    value={value}
                 />
             </div>
             </div>

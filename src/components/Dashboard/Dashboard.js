@@ -15,30 +15,39 @@ import {
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 import axios from "axios";
 
-const transactions = Array.from({ length: 10 }, (_, index) => ({
-    id: index + 1,
-    description: `Transaction ${index + 1}`,
-    amount: Math.random() * 1000 - 500,
-}));
-
-const balance = transactions.reduce(
-    (total, transaction) => total + transaction.amount,
-    0
-);
-
 const BankDashboard = () => {
     const [{ logged, customerID, details }, dispatch] = useDataLayerValue();
+    const [transactions, setTransactions] = React.useState([]);
+    const [credits, setCredits] = React.useState([]);
+
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/v1/get/user/" + customerID)
+            .get(
+                "http://localhost:8080/api/v1/transactions/debit/" +
+                    details.accountNo
+            )
             .then((res) => {
                 console.log(res.data);
-                dispatch({
-                    type: "SET_DETAILS",
-                    details: res.data,
-                });
+                setTransactions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/credit/" +
+                    details.accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setCredits(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
             });
     }, []);
+    var i = 0;
     console.log(logged);
     return (
         <Container maxWidth="lg" className="container">
@@ -84,27 +93,48 @@ const BankDashboard = () => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>ID</TableCell>
-                                    <TableCell>Description</TableCell>
+                                    <TableCell>Transaction Type</TableCell>
+                                    <TableCell>Date</TableCell>
                                     <TableCell align="right">Amount</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {transactions.map((transaction, idx) => (
                                     <TableRow key={idx}>
-                                        <TableCell>{transaction.id}</TableCell>
+                                        <TableCell>{++i}</TableCell>
                                         <TableCell>
-                                            {transaction.description}
+                                            {transaction.transactionType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.transDate}
                                         </TableCell>
                                         <TableCell
                                             align="right"
-                                            className={
-                                                transaction.amount < 0
-                                                    ? "text-red-500"
-                                                    : "text-green-500"
-                                            }
+                                            className="text-red-500"
                                         >
-                                            {transaction.amount > 0 ? "+" : "-"}{" "}
-                                            $
+                                            {"- "}₹
+                                            {Math.abs(
+                                                transaction.amount.toFixed(2)
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableBody>
+                                {credits.map((transaction, idx) => (
+                                    <TableRow key={idx}>
+                                        <TableCell>{++i}</TableCell>
+                                        <TableCell>
+                                            {transaction.transactionType}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.transDate}
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            className="text-green-500"
+                                        >
+                                            {"+ "}₹
                                             {Math.abs(
                                                 transaction.amount.toFixed(2)
                                             )}

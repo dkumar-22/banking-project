@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -10,30 +10,24 @@ import {
     Button,
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 
 const BeneficiaryTable = () => {
-    const [beneficiaries, setBeneficiaries] = useState([
-        { id: 1, accountNumber: "123456789", name: "John Doe", nickname: "JD" },
-        {
-            id: 2,
-            accountNumber: "987654321",
-            name: "Jane Smith",
-            nickname: "JS",
-        },
-        {
-            id: 3,
-            accountNumber: "123123123",
-            name: "John Smith",
-            nickname: "JS",
-        },
-        { id: 4, accountNumber: "321321321", name: "Jane Doe", nickname: "JD" },
-        // Add more beneficiaries here
-    ]);
-
-    const handleAddBeneficiary = () => {
-        // Implement your logic to add a new beneficiary
-    };
+    const [{ details }, dispatch] = useDataLayerValue();
+    const [beneficiaries, setBeneficiaries] = useState([]);
+    useEffect(() => {
+        axios
+            .get(
+                "http://localhost:8080/api/v1/beneficiary/" + details.accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setBeneficiaries(res.data);
+            });
+    }, []);
+    
 
     return (
         <div style={{ marginTop: "100px", padding: "20px" }}>
@@ -65,7 +59,7 @@ const BeneficiaryTable = () => {
                         {beneficiaries.map((beneficiary) => (
                             <TableRow key={beneficiary.id}>
                                 <TableCell>
-                                    {beneficiary.accountNumber}
+                                    {beneficiary.receiverAccNo}
                                 </TableCell>
                                 <TableCell>{beneficiary.name}</TableCell>
                                 <TableCell>{beneficiary.nickname}</TableCell>

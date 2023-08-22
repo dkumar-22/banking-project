@@ -53,23 +53,6 @@ export default function Review({
         },
     ];
 
-    const addresses = [
-        details.address1,
-        details.address2,
-        details.city,
-        details.state,
-        details.zip,
-        details.country,
-    ];
-    const paddresses = [
-        details.paddress1 === '' ? details.address1 : details.paddress1,
-        details.paddress2 === '' ? details.address2 : details.paddress2,
-        details.pcity === '' ? details.city : details.pcity,
-        details.pstate === '' ? details.state : details.pstate,
-        details.pzip === '' ? details.zip : details.pzip,
-        details.pcountry === '' ? details.country : details.pcountry,
-    ];
-
     return (
         <Container component="main" maxWidth="sm" sx={{ mb: 4, mt:15 }}>
             <Paper
