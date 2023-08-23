@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState} from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -11,13 +11,21 @@ import AdminTransactionsList from './comp/adminTransactionsList';
 import { ColorModeContext, useMode } from './theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import AdminUsersList from './comp/adminUsersList';
+import SideBar from './comp/Sidebar';
+
+import Display from './comp/Display';
 
 export default function AdminDashboard() {
 
-    const [theme, colorMode] = useMode();
+    const [curr, setCurr] = useState("");
 
     return (
-        <AdminSideMenuBar/>
+        <>
+            <AdminSideMenuBar curr = {curr} setCurr = {setCurr}/>
+            <div className = "right">
+                <Display curr = {curr}/>
+            </div>
+        </>
     );
     
 }

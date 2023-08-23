@@ -8,3 +8,10 @@
     display: flex;
     position: relative;
 }
+
+.right {
+    position: absolute;
+    /* margin-left: 5%; */
+    /* margin-top: 5%; */
+    left: 10%;
+}
