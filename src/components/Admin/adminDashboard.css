@@ -1,0 +1,10 @@
+
+.content {
+    height: 100%;
+    width: 100%;
+}
+
+.homePage {
+    display: flex;
+    position: relative;
+}

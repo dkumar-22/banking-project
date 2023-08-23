@@ -83,6 +83,7 @@ export default function Album() {
               spacing={2}
               justifyContent="center"
             >
+              <Link href="/admin/login"><Button variant="contained" style={{ color: "black", backgroundColor: "white", borderRadius: "25px" }}>Admin Login</Button></Link>
               <Link href="/login"><Button variant="contained" style={{ color: "black", backgroundColor: "white", borderRadius: "25px" }}>Login</Button></Link>
               <Link href="/register"><Button variant="outlined" style={{ color: "white", borderColor: "white", borderRadius: "23px" }}>Sign up for netbanking</Button></Link>
 

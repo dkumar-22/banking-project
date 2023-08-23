@@ -13,11 +13,16 @@ import Rtgs from "./components/Rtgs/Rtgs";
 import Imps from "./components/Imps/Imps";
 import NavbarDrawer from "./components/Dashboard/NavbarDrawer";
 import AccountSummary from "./components/Dashboard/AccountSummary";
+import AdminLogin from "./components/Admin/adminLogin";
+import AdminDashboard from "./components/Admin/adminDashboard";
 import * as React from "react";
 import BeneficiaryTable from "./components/Dashboard/Beneficiaries";
 import AccountStatement from "./components/Dashboard/AccountStatement";
 import { useDataLayerValue } from "./ContextAPI/DataLayer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import AdminUsersList from "./components/Admin/comp/adminUsersList";
+import AdminTransactionsList from "./components/Admin/comp/adminTransactionsList";
+
 function App() {
     const [{ logged }, dispatch] = useDataLayerValue();
     return (
@@ -27,6 +32,18 @@ function App() {
                 <Route exact path="/login" element={<Login />}></Route>
                 <Route exact path="/register" element={<Register />}></Route>
                 <Route exact path="/apply" element={<Checkout />}></Route>
+                <Route exact path="/admin/login" element={<AdminLogin />}></Route>
+                <Route exact path="/admin/dashboard" element={<AdminDashboard />}></Route>
+                <Route
+                    exact
+                    path = '/admin/dashboard/users'
+                    element = {<AdminUsersList/>}
+                ></Route>
+                <Route
+                    exact
+                    path = '/admin/dashboard/transactions'
+                    element = {<AdminTransactionsList/>}
+                > </Route>
                 <Route
                     exact
                     path="/beneficiaries"
