@@ -66,21 +66,12 @@ export default function SignInSide() {
         const data = new FormData(event.currentTarget);
         const sVar = {
             customerID: data.get("customerID"),
-            password: md5(data.get("password")),
+            password: data.get("password"),
         };
         axios
-            .post("http://localhost:8080/api/v1/login", sVar)
+            .post("http://localhost:8080/auth/login", sVar)
             .then((res) => {
-                if (res.data[0] === "1") {
-                    dispatch({
-                        type: "SET_LOGGED",
-                        logged: true,
-                    });
-                    dispatch({
-                        type: "SET_CUSTOMERID",
-                        customerID: data.get("customerID"),
-                    });
-                } else alert("Invalid Credentials");
+                console.log(res.data);
             })
             .catch((e) => console.log(e));
 
@@ -91,6 +82,10 @@ export default function SignInSide() {
                 dispatch({
                     type: "SET_DETAILS",
                     details: res.data,
+                });
+                dispatch({
+                    type: "SET_LOGGED",
+                    logged: true,
                 });
             });
     };

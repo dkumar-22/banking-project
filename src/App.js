@@ -18,6 +18,8 @@ import BeneficiaryTable from "./components/Dashboard/Beneficiaries";
 import AccountStatement from "./components/Dashboard/AccountStatement";
 import { useDataLayerValue } from "./ContextAPI/DataLayer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import SearchByCustomerID from "./components/Admin/SearchByCustomerID";
+import SearchByAccountNumber from "./components/Admin/SearchByAccountNumber";
 function App() {
     const [{ logged }, dispatch] = useDataLayerValue();
     return (
@@ -25,36 +27,58 @@ function App() {
             <Routes>
                 <Route exact path="/" element={<HomePage />}></Route>
                 <Route exact path="/login" element={<Login />}></Route>
+                <Route
+                    exact
+                    path="/search/cid"
+                    element={<SearchByCustomerID />}
+                ></Route>
+                <Route
+                    exact
+                    path="/search/accno"
+                    element={<SearchByAccountNumber />}
+                ></Route>
                 <Route exact path="/register" element={<Register />}></Route>
                 <Route exact path="/apply" element={<Checkout />}></Route>
                 <Route
                     exact
                     path="/beneficiaries"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <BeneficiaryTable />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <BeneficiaryTable />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
                 <Route
                     exact
                     path="/statement"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <AccountStatement />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <AccountStatement />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
                 <Route
                     exact
                     path="/dashboard"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <Dashboard />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <Dashboard />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
                 <Route
@@ -76,10 +100,14 @@ function App() {
                     exact
                     path="/beneficiary"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <AddBeneficiary />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <AddBeneficiary />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
 
@@ -87,10 +115,14 @@ function App() {
                     exact
                     path="/neft"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <Neftapp />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <Neftapp />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
 
@@ -98,10 +130,14 @@ function App() {
                     exact
                     path="/rtgs"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <Rtgs />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <Rtgs />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
 
@@ -109,10 +145,14 @@ function App() {
                     exact
                     path="/imps"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <Imps />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <Imps />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
 
@@ -120,10 +160,14 @@ function App() {
                     exact
                     path="/change-password"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <Setp />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <Setp />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
 
@@ -131,10 +175,14 @@ function App() {
                     exact
                     path="/summary"
                     element={
-                        logged ? <>
-                            <NavbarDrawer />
-                            <AccountSummary />
-                        </> : <ProtectedRoute />
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <AccountSummary />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
                     }
                 ></Route>
             </Routes>
