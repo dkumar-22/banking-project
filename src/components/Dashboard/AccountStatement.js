@@ -24,21 +24,12 @@ const BankDashboard = () => {
     const [fromDate, setFromDate] = React.useState("");
     useEffect(() => {
         axios
-            .get("http://localhost:8080/api/v1/get/user/" + customerID)
-            .then((res) => {
-                console.log(res.data);
-                dispatch({
-                    type: "SET_DETAILS",
-                    details: res.data,
-                });
-            });
-        axios
             .get(
                 "http://localhost:8080/api/v1/transactions/debit/" +
                     details.accountNo
             )
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 setTransactions(res.data);
             })
             .catch((err) => {

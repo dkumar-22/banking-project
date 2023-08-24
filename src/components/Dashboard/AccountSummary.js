@@ -12,10 +12,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Paper from "@mui/material/Paper";
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 
-export default function Review({
-}) {
-
-    const [{details},dispatch] = useDataLayerValue();
+export default function Review({}) {
+    const [{ details }, dispatch] = useDataLayerValue();
 
     const products = [
         {
@@ -54,40 +52,63 @@ export default function Review({
     ];
 
     return (
-        <Container component="main" maxWidth="sm" sx={{ mb: 4, mt:15 }}>
+        <Container component="main" maxWidth="sm" sx={{ mb: 4, mt: 15 }}>
             <Paper
                 variant="outlined"
                 sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
             >
                 <Box component="form">
                     <React.Fragment>
-                        <Typography variant="h6" gutterBottom style={{textAlign:"center"}}>
+                        <Typography
+                            variant="h6"
+                            gutterBottom
+                            style={{ textAlign: "center" }}
+                        >
                             Account Summary
                         </Typography>
                         <List disablePadding>
                             {products.map((product) => (
-                                <ListItem key={product.name} sx={{ py: 1, px: 0 }}>
+                                <ListItem
+                                    key={product.name}
+                                    sx={{ py: 1, px: 0 }}
+                                >
                                     <ListItemText
                                         primary={product.name}
                                         secondary={product.desc}
                                     />
                                     <Typography variant="body2">
-                                        {product.price === '' ? '-' : product.price}
+                                        {product.price === ""
+                                            ? "-"
+                                            : product.price}
                                     </Typography>
                                 </ListItem>
                             ))}
                         </List>
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    sx={{ mt: 2 }}
+                                >
                                     Current Address
                                 </Typography>
                                 <Typography gutterBottom>
                                     {details.currentAddress}
                                 </Typography>
                             </Grid>
-                            <Grid item container direction="column" xs={12} sm={6}>
-                                <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+                            <Grid
+                                item
+                                container
+                                direction="column"
+                                xs={12}
+                                sm={6}
+                            >
+                                <Typography
+                                    variant="h6"
+                                    gutterBottom
+                                    sx={{ mt: 2 }}
+                                >
                                     Permanent Address
                                 </Typography>
                                 <Typography gutterBottom>
@@ -96,6 +117,8 @@ export default function Review({
                             </Grid>
                         </Grid>
                     </React.Fragment>
-                </Box></Paper></Container>
+                </Box>
+            </Paper>
+        </Container>
     );
 }

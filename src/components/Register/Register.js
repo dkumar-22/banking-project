@@ -77,33 +77,24 @@ export default function SignUp() {
                     "http://localhost:8080/api/v1/get/user/" +
                         submitVar.customerID
                 );
-                console.log(resp1)
+                console.log(resp1);
                 if (resp1.data === "") {
                     alert("Customer ID does not exist");
                     return;
                 }
-                const resp2 = await axios.get(
-                    "http://localhost:8080/api/v1/customer/" +
-                        submitVar.customerID
-                );
-
-                if (resp2.data !== "") {
-                    alert("Account already exists");
-                    return;
-                }
 
                 const resp = await axios.post(
-                    "http://localhost:8080/api/v1/sendCustomer",
+                    "http://localhost:8080/auth/register",
                     {
                         customerID: submitVar.customerID,
-                        password: md5(submitVar.password),
+                        password: submitVar.password,
                         transactionPassword: md5(submitVar.transactionPassword),
                     }
                 );
                 console.log(resp);
                 alert("Account Created");
             } catch (e) {
-                console.log(e);
+                alert("Error Occured");
             }
         }
     };
