@@ -49,7 +49,7 @@ export default function Checkout() {
         phone: "",
         address1: "",
         address2: "",
-        minAccountBalance:0,
+        minAccountBalance: 0,
         city: "",
         state: "",
         zip: "",
@@ -110,28 +110,29 @@ export default function Checkout() {
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = (e) => {
-        
-        if (activeStep === steps.length-1){ console.log(details);
-        const submitObj = {
-            accountNo: details.phone + "00",
-            customerID: details.firstName.toLowerCase().substring(0,3)+details.phone.substring(0,3),
-            firstName: details.firstName,
-            lastName: details.lastName,
-            currentAddress:details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip,
-            permanentAddress:details.paddress1===''?details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip: details.paddress1 + " " + details.paddress2 + " " + details.pcity + " " + details.pstate + " " + details.pzip,
-            contactNo:details.phone,
-            aadharNo:details.aadharno,
-            panNo:details.pan,
-            dob: details.dob,
-            email: details.email,
-            middleName:details.middleName,
-            minAccountBalance:details.minAccountBalance,
-            occupation: details.occupation
+
+        if (activeStep === steps.length - 1) {
+            console.log(details);
+            const submitObj = {
+                accountNo: details.phone + "00",
+                customerID: details.firstName.toLowerCase().substring(0, 3) + details.phone.substring(0, 3),
+                firstName: details.firstName,
+                lastName: details.lastName,
+                currentAddress: details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip,
+                permanentAddress: details.paddress1 === '' ? details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip : details.paddress1 + " " + details.paddress2 + " " + details.pcity + " " + details.pstate + " " + details.pzip,
+                contactNo: details.phone,
+                aadharNo: details.aadharno,
+                panNo: details.pan,
+                dob: details.dob,
+                email: details.email,
+                middleName: details.middleName,
+                minAccountBalance: details.minAccountBalance,
+                occupation: details.occupation
+            }
+            console.log(submitObj);
+            axios.post("http://localhost:8080/api/v1/sendUser", submitObj).then((res) => console.log(res)).catch((e) => console.error(e));
         }
-        console.log(submitObj);
-        axios.post("http://localhost:8080/api/v1/sendUser",submitObj).then((res)=>console.log(res)).catch((e)=>console.error(e));
-        }
-       
+
         setActiveStep(activeStep + 1);
         //upload request will also incorporated here
     };
@@ -194,7 +195,10 @@ export default function Checkout() {
                                     Thank you for your trust.
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    Details Added Successfully
+                                    Details Added Successfully, waiting for approval from the admin.
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    {"Your Account Number " + details.phone + "00. \nCustomer ID: " + details.firstName.toLowerCase().substring(0, 3) + details.phone.substring(0, 3)}
                                 </Typography>
                             </React.Fragment>
                         ) : (
