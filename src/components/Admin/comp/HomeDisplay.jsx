@@ -49,7 +49,7 @@
 //         </div>
 //     )
 // }
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Table } from "@mui/material";
 
 import React from "react";
@@ -68,7 +68,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-
+import axios from "axios"
 const useStyles = makeStyles({
   table: {
     width: 400,
@@ -78,14 +78,6 @@ const useStyles = makeStyles({
 function createData(Name, AccountNo, MobileNo, EmailID, MinimumBalance) {
   return { Name, AccountNo, MobileNo, EmailID, MinimumBalance };
 }
-
-const rows = [
-  createData("Gauri ", 1234567, 7654321, "abc@gmail.com", 500),
-  createData("Dhruv", 1234568, 8654321, "adc@gmail.com", 500),
-  createData("Avijeet", 1234569, 9654321, "aec@gmail.com", 500),
-  createData("Priyanka", 1234560, 9654321, "afc@gmail.com", 500),
-  createData("Omkar", 1234561, 1654321, "agc@gmail.com", 500),
-];
 
 function HomeDisplay() {
   //   <TextField
@@ -102,6 +94,22 @@ function HomeDisplay() {
   //                 }}
   //               />
 
+  const [approvals, setApprovals] = useState([])
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/v1/user/active/false").then((res) => {
+      setApprovals(res.data)
+    }).catch((e) => console.error(e))
+  }, [])
+
+  const makeActive = (id) => {
+    axios.put(`http://localhost:8080/api/v1/makeActive/${id}`).then((res) => {
+      console.log(res.data)
+      alert("User is now active");
+      setApprovals(approvals.filter((user) => user.customerID !== id))
+    }).catch((e) => console.error(e))
+  }
+
   const classes = useStyles();
   return (
     <TableContainer component={Paper}>
@@ -109,34 +117,37 @@ function HomeDisplay() {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell align="right">AccountNo</TableCell>
-            <TableCell align="right">MobileNo</TableCell>
-            <TableCell align="right">EmailID</TableCell>
-            <TableCell align="right">MinimumBalance</TableCell>
-            <TableCell align="right">Actions</TableCell>
+            <TableCell align="center">Account No</TableCell>
+            <TableCell align="center">Customer ID</TableCell>
+            <TableCell align="center">Mobile No</TableCell>
+            <TableCell align="center">Email ID</TableCell>
+            <TableCell align="center">Minimum Balance</TableCell>
+            <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.Name}>
+          {approvals.map((row, idx) => (
+            <TableRow key={idx}>
               <TableCell component="th" scope="row">
-                {row.Name}
+                {`${row.firstName} ${row.middleName} ${row.lastName}`}
               </TableCell>
-              <TableCell align="right">{row.AccountNo}</TableCell>
-              <TableCell align="right">{row.MobileNo}</TableCell>
-              <TableCell align="right">{row.EmailID}</TableCell>
-              <TableCell align="right">{row.MinimumBalance}</TableCell>
-              <TableCell align="right">
-                <div style={{color:"white"}}>
+              <TableCell align="center">{row.accountNo}</TableCell>
+              <TableCell align="center">{row.customerID}</TableCell>
+              <TableCell align="center">{row.contactNo}</TableCell>
+              <TableCell align="center">{row.email}</TableCell>
+              <TableCell align="center">{row.minAccountBalance}</TableCell>
+              <TableCell align="center">
+                <div style={{ color: "white" }}>
                   <Button
                     variant="Approve"
-                    style={{ backgroundColor: "green", margin:"20px" }}
+                    style={{ backgroundColor: "green", margin: "20px" }}
+                    onClick={() => makeActive(row.customerID)}
                   >
                     Approve
                   </Button>
-                  <Button variant="Deny" style={{ backgroundColor: "red" }}>
+                  {/* <Button variant="Deny" style={{ backgroundColor: "red" }}>
                     Deny{" "}
-                  </Button>
+                  </Button> */}
                 </div>
               </TableCell>
             </TableRow>

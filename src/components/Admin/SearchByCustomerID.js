@@ -14,11 +14,14 @@ import axios from "axios";
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import Tables from "../Table/Table"
 
 function SearchByAccountNumber() {
     const [details, setDetails] = useState({});
     const [visible, makeVisible] = useState(false);
     const [value, setVal] = useState("");
+    const [transactions, setTransactions] = React.useState([]);
+    const [credits, setCredits] = React.useState([]);
     const [products, setProducts] = useState([
         {
             name: "Name",
@@ -50,6 +53,43 @@ function SearchByAccountNumber() {
         },
     ]);
 
+    const makeInactive = (id) => {
+        axios.put(`http://localhost:8080/api/v1/makeInactive/${id}`).then((res) => {
+          console.log(res.data)
+          alert("User is now Inactive");
+        }).catch((e) => console.error(e))
+      }
+
+
+    function makeTable(accountNo) {
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/debit/" +
+                accountNo
+            )
+            .then((res) => {
+                // console.log(res.data);
+                setTransactions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/credit/" +
+                accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setCredits(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+
     function handleSearch(e) {
         e.preventDefault();
         console.log(value);
@@ -73,6 +113,22 @@ function SearchByAccountNumber() {
                         price: res.data.email,
                     },
                     {
+                        name: "Customer ID",
+                        price: res.data.customerID,
+                    },
+                    {
+                        name: "Account No.",
+                        price: res.data.accountNo,
+                    },
+                    {
+                        name: "Active Status",
+                        price: res.data.isActive ? "Active" : "Inactive",
+                    },
+                    {
+                        name: "Available Balance",
+                        price: `₹ ${res.data.minAccountBalance}`,
+                    },
+                    {
                         name: "Phone Number",
                         price: res.data.contactNo,
                     },
@@ -93,6 +149,7 @@ function SearchByAccountNumber() {
                         price: res.data.dob,
                     },
                 ]);
+                makeTable(res.data.accountNo);
                 makeVisible(true);
             })
             .catch((err) => {
@@ -101,7 +158,7 @@ function SearchByAccountNumber() {
     }
 
     return (
-        <div style={{padding: "40px"}}>
+        <div style={{ padding: "40px" }}>
             <Paper
                 component="form"
                 onSubmit={handleSearch}
@@ -131,78 +188,86 @@ function SearchByAccountNumber() {
             </Paper>
 
             {visible && (
-                <Container
-                    component="main"
-                    maxWidth="sm"
-                    sx={{ mb: 4, mt: 15 }}
-                >
-                    <Paper
-                        variant="outlined"
-                        sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+                <>
+                    <Container
+                        component="main"
+                        maxWidth="sm"
+                        sx={{ mb: 4, mt: 15 }}
                     >
-                        <Box component="form">
-                            <React.Fragment>
-                                <Typography
-                                    variant="h6"
-                                    gutterBottom
-                                    style={{ textAlign: "center" }}
-                                >
-                                    Account Summary
-                                </Typography>
-                                <List disablePadding>
-                                    {products.map((product) => (
-                                        <ListItem
-                                            key={product.name}
-                                            sx={{ py: 1, px: 0 }}
-                                        >
-                                            <ListItemText
-                                                primary={product.name}
-                                                secondary={product.desc}
-                                            />
-                                            <Typography variant="body2">
-                                                {product.price === ""
-                                                    ? "-"
-                                                    : product.price}
-                                            </Typography>
-                                        </ListItem>
-                                    ))}
-                                </List>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            sx={{ mt: 2 }}
-                                        >
-                                            Current Address
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                            {details.currentAddress}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid
-                                        item
-                                        container
-                                        direction="column"
-                                        xs={12}
-                                        sm={6}
+                        <Paper
+                            variant="outlined"
+                            sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+                        >
+                            <Box component="form">
+                                <React.Fragment>
+                                    <Typography
+                                        variant="h6"
+                                        gutterBottom
+                                        style={{ textAlign: "center" }}
                                     >
-                                        <Typography
-                                            variant="h6"
-                                            gutterBottom
-                                            sx={{ mt: 2 }}
+                                        Account Summary
+                                    </Typography>
+                                    {details.isActive && <button onClick={()=>makeInactive(details.customerID)} style={{ marginLeft: "35%", color: "white", backgroundColor: "red", padding: "8px", borderRadius: "15px" }}>
+                                        Disable the User
+                                    </button>}
+                                    <List disablePadding>
+                                        {products.map((product) => (
+                                            <ListItem
+                                                key={product.name}
+                                                sx={{ py: 1, px: 0 }}
+                                            >
+                                                <ListItemText
+                                                    primary={product.name}
+                                                    secondary={product.desc}
+                                                />
+                                                <Typography variant="body2">
+                                                    {product.price === ""
+                                                        ? "-"
+                                                        : product.price}
+                                                </Typography>
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={12} sm={6}>
+                                            <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                sx={{ mt: 2 }}
+                                            >
+                                                Current Address
+                                            </Typography>
+                                            <Typography gutterBottom>
+                                                {details.currentAddress}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid
+                                            item
+                                            container
+                                            direction="column"
+                                            xs={12}
+                                            sm={6}
                                         >
-                                            Permanent Address
-                                        </Typography>
-                                        <Typography gutterBottom>
-                                            {details.permanentAddress}
-                                        </Typography>
+                                            <Typography
+                                                variant="h6"
+                                                gutterBottom
+                                                sx={{ mt: 2 }}
+                                            >
+                                                Permanent Address
+                                            </Typography>
+                                            <Typography gutterBottom>
+                                                {details.permanentAddress}
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </React.Fragment>
-                        </Box>
-                    </Paper>
-                </Container>
+                                </React.Fragment>
+                            </Box>
+                        </Paper>
+                        <Tables credits={credits} transactions={transactions} />
+                    </Container>
+
+
+                </>
             )}
         </div>
     );

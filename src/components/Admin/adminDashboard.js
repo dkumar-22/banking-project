@@ -21,7 +21,7 @@ export default function AdminDashboard() {
 
     return (
         <>
-            <AdminSideMenuBar curr = {curr} setCurr = {setCurr}/>
+           
             <div className = "right">
                 <Display curr = {curr}/>
             </div>

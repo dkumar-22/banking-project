@@ -21,8 +21,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
-import Link from "@mui/material/Link";
+import { Route, BrowserRouter, Switch, Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -91,6 +90,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+const styles = {
+  textDecoration: "none",
+  color: "black"
+}
+
 export default function MiniDrawer({ curr, setCurr }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -137,88 +141,114 @@ export default function MiniDrawer({ curr, setCurr }) {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItem
-            // button component = {Link} href = "/admin/dashboard/users"
-            onClick={() => {
-              setCurr("user");
-            }}
-            key="Users"
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
+          <Link to="/search/cid" style={styles}>
+            <ListItem
+              // button component = {Link} href = "/admin/dashboard/users"
+              key="Users"
+              disablePadding
+              sx={{ display: "block" }}
             >
-              <ListItemIcon
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <AccountCircleRoundedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Users" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem
-            // button component = {Link} href = "/admin/dashboard/transactions"
-            onClick={() => {
-              setCurr("transactions");
-            }}
-            key="Transactions"
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AccountCircleRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Find By Customer ID" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="/search/accno" style={styles}>
+            <ListItem
+              // button component = {Link} href = "/admin/dashboard/users
+              key="Users"
+              disablePadding
+              sx={{ display: "block" }}
             >
-              <ListItemIcon
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <CurrencyRupeeRoundedIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Transactions"
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AccountCircleRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Find by Account No." sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="/admin/dashboard">
+            <ListItem
+              // button component = {Link} href = "/admin/dashboard/transactions
+              key="Dashboard"
+              disablePadding
+              sx={{ display: "block" }}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <CurrencyRupeeRoundedIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Dashboard"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         </List>
         <Divider />
         <List>
-          <ListItem key="Add user" disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+          <Link to="/admin/apply" style={styles}>
+            <ListItem key="Add user" disablePadding sx={{ display: "block" }}>
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                <AddBoxRoundedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Add user" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AddBoxRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Add user" sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem></Link>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

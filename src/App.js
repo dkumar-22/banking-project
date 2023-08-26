@@ -22,9 +22,10 @@ import { useDataLayerValue } from "./ContextAPI/DataLayer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminUsersList from "./components/Admin/comp/adminUsersList";
 import AdminTransactionsList from "./components/Admin/comp/adminTransactionsList";
-
+import AdminSideMenuBar from "./components/Admin/comp/AdminSideMenuBar"
 import SearchByCustomerID from "./components/Admin/SearchByCustomerID";
 import SearchByAccountNumber from "./components/Admin/SearchByAccountNumber";
+import AdminCheckout from "./components/Admin/AccountCreationForm/Checkout";
 function App() {
     const [{ logged }, dispatch] = useDataLayerValue();
     return (
@@ -35,26 +36,27 @@ function App() {
                 <Route
                     exact
                     path="/search/cid"
-                    element={<SearchByCustomerID />}
+                    element={<><AdminSideMenuBar /><SearchByCustomerID /></>}
                 ></Route>
                 <Route
                     exact
                     path="/search/accno"
-                    element={<SearchByAccountNumber />}
+                    element={<><AdminSideMenuBar /><SearchByAccountNumber /></>}
                 ></Route>
                 <Route exact path="/register" element={<Register />}></Route>
                 <Route exact path="/apply" element={<Checkout />}></Route>
+                <Route exact path="/admin/apply" element={<><AdminSideMenuBar /><AdminCheckout /></>}></Route>
                 <Route exact path="/admin/login" element={<AdminLogin />}></Route>
-                <Route exact path="/admin/dashboard" element={<AdminDashboard />}></Route>
+                <Route exact path="/admin/dashboard" element={<><AdminSideMenuBar /> <AdminDashboard /></>}></Route>
                 <Route
                     exact
-                    path = '/admin/dashboard/users'
-                    element = {<AdminUsersList/>}
+                    path='/admin/dashboard/users'
+                    element={<AdminUsersList />}
                 ></Route>
                 <Route
                     exact
-                    path = '/admin/dashboard/transactions'
-                    element = {<AdminTransactionsList/>}
+                    path='/admin/dashboard/transactions'
+                    element={<AdminTransactionsList />}
                 > </Route>
                 <Route
                     exact

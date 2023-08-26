@@ -14,11 +14,13 @@ import axios from "axios";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Tables from "../Table/Table";
 function SearchByAccountNumber() {
     const [details, setDetails] = useState({});
     const [visible, makeVisible] = useState(false);
     const [value, setVal] = useState("");
+    const [transactions, setTransactions] = React.useState([]);
+    const [credits, setCredits] = React.useState([]);
     const [products, setProducts] = useState([
         {
             name: "Name",
@@ -26,6 +28,14 @@ function SearchByAccountNumber() {
         },
         {
             name: "Email",
+            price: "",
+        },
+        {
+            name: "Customer ID",
+            price: "",
+        },
+        {
+            name: "Account Number",
             price: "",
         },
         {
@@ -50,6 +60,41 @@ function SearchByAccountNumber() {
         },
     ]);
 
+    const makeInactive = (id) => {
+        axios.put(`http://localhost:8080/api/v1/makeInactive/${id}`).then((res) => {
+            console.log(res.data)
+            alert("User is now Inactive");
+        }).catch((e) => console.error(e))
+    }
+
+    function makeTable(accountNo) {
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/debit/" +
+                accountNo
+            )
+            .then((res) => {
+                // console.log(res.data);
+                setTransactions(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .get(
+                "http://localhost:8080/api/v1/transactions/credit/" +
+                accountNo
+            )
+            .then((res) => {
+                console.log(res.data);
+                setCredits(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     function handleSearch(e) {
         e.preventDefault();
         console.log(value);
@@ -73,6 +118,22 @@ function SearchByAccountNumber() {
                         price: res.data.email,
                     },
                     {
+                        name: "Customer ID",
+                        price: res.data.customerID,
+                    },
+                    {
+                        name: "Account No.",
+                        price: res.data.accountNo,
+                    },
+                    {
+                        name: "Active Status",
+                        price: res.data.isActive ? "Active" : "Inactive",
+                    },
+                    {
+                        name: "Available Balance",
+                        price: `₹ ${res.data.minAccountBalance}`,
+                    },
+                    {
                         name: "Phone Number",
                         price: res.data.contactNo,
                     },
@@ -93,6 +154,7 @@ function SearchByAccountNumber() {
                         price: res.data.dob,
                     },
                 ]);
+                makeTable(res.data.accountNo);
                 makeVisible(true);
             })
             .catch((err) => {
@@ -114,6 +176,7 @@ function SearchByAccountNumber() {
                     backgroundColor: "whitesmoke",
                 }}
             >
+
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Search By Account Number"
@@ -148,6 +211,9 @@ function SearchByAccountNumber() {
                                 >
                                     Account Summary
                                 </Typography>
+                                {details.isActive && <button onClick={()=>makeInactive(details.customerID)} style={{ marginLeft: "35%", color: "white", backgroundColor: "red", padding: "8px", borderRadius: "15px" }}>
+                                    Disable the User
+                                </button>}
                                 <List disablePadding>
                                     {products.map((product) => (
                                         <ListItem
@@ -201,6 +267,7 @@ function SearchByAccountNumber() {
                             </React.Fragment>
                         </Box>
                     </Paper>
+                    <Tables transactions={transactions} credits={credits} />
                 </Container>
             )}
         </div>

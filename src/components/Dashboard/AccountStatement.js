@@ -22,33 +22,33 @@ const BankDashboard = () => {
     const [credits, setCredits] = React.useState([]);
     const [toDate, setToDate] = React.useState("");
     const [fromDate, setFromDate] = React.useState("");
-    useEffect(() => {
-        axios
-            .get(
-                "http://localhost:8080/api/v1/transactions/debit/" +
-                    details.accountNo
-            )
-            .then((res) => {
-                // console.log(res.data);
-                setTransactions(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    // useEffect(() => {
+    //     axios
+    //         .get(
+    //             "http://localhost:8080/api/v1/transactions/debit/" +
+    //             details.accountNo
+    //         )
+    //         .then((res) => {
+    //             // console.log(res.data);
+    //             setTransactions(res.data);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
 
-        axios
-            .get(
-                "http://localhost:8080/api/v1/transactions/credit/" +
-                    details.accountNo
-            )
-            .then((res) => {
-                console.log(res.data);
-                setCredits(res.data);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
+    //     axios
+    //         .get(
+    //             "http://localhost:8080/api/v1/transactions/credit/" +
+    //             details.accountNo
+    //         )
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             setCredits(res.data);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }, []);
     var i = 0;
     console.log(logged);
 
@@ -133,6 +133,8 @@ const BankDashboard = () => {
                                     <TableCell>Transaction Type</TableCell>
                                     <TableCell>Date</TableCell>
                                     <TableCell align="right">Amount</TableCell>
+                                    <TableCell align="right">From</TableCell>
+                                    <TableCell align="right">To</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -153,6 +155,12 @@ const BankDashboard = () => {
                                             {Math.abs(
                                                 transaction.amount.toFixed(2)
                                             )}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {transaction.senderAccNo}
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            {transaction.receiverAccNo}
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -175,6 +183,12 @@ const BankDashboard = () => {
                                             {Math.abs(
                                                 transaction.amount.toFixed(2)
                                             )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.senderAccNo}
+                                        </TableCell>
+                                        <TableCell>
+                                            {transaction.receiverAccNo}
                                         </TableCell>
                                     </TableRow>
                                 ))}
