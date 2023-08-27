@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -13,9 +11,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-import md5 from "md5-hash";
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Copyright(props) {
     return (
@@ -47,7 +46,7 @@ const defaultTheme = createTheme({
 
 export default function SignInSide() {
     let navigate = useNavigate();
-    const [{ logged }, dispatch] = useDataLayerValue();
+    const [{ logged, jwtToken }, dispatch] = useDataLayerValue();
 
     // useEffect(() => {
     //     axios
@@ -61,6 +60,37 @@ export default function SignInSide() {
     //         });
     // }, []);
 
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    function handleDetails(cid, jwt) {
+        axios
+            .get("http://localhost:8080/api/v1/get/user/" + cid, {
+                headers: {
+                    Authorization: "Bearer " + jwt,
+                },
+            })
+            .then((res) => {
+                console.log(res.data);
+                dispatch({
+                    type: "SET_DETAILS",
+                    details: res.data,
+                });
+            })
+            .catch((e) => {
+                console.log(e);
+                errorToast("Error Fetching User Details");
+                return;
+            });
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -72,21 +102,29 @@ export default function SignInSide() {
             .post("http://localhost:8080/auth/login", sVar)
             .then((res) => {
                 console.log(res.data);
-            })
-            .catch((e) => console.log(e));
-
-        axios
-            .get("http://localhost:8080/api/v1/get/user/" + sVar.customerID)
-            .then((res) => {
-                console.log(res.data);
-                dispatch({
-                    type: "SET_DETAILS",
-                    details: res.data,
-                });
+                sessionStorage.setItem("jwtToken", res.data.jwtToken);
+                sessionStorage.setItem("userName", res.data.userName);
                 dispatch({
                     type: "SET_LOGGED",
                     logged: true,
                 });
+                dispatch({
+                    type: "SET_CUSTOMERID",
+                    customerID: sVar.customerID,
+                });
+                dispatch({
+                    type: "SET_JWTTOKEN",
+                    jwtToken: res.data.jwtToken,
+                });
+                handleDetails(
+                    sVar.customerID,
+                    sessionStorage.getItem("jwtToken")
+                );
+            })
+            .catch((e) => {
+                console.log(e);
+                errorToast("Invalid Credentials");
+                return;
             });
     };
 
@@ -199,6 +237,8 @@ export default function SignInSide() {
                     </Box>
                 </Grid>
             </Grid>
+            <ToastContainer />
+            <Copyright />
         </ThemeProvider>
     );
 }

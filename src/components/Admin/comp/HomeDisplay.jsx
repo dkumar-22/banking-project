@@ -68,94 +68,129 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import axios from "axios"
+import axios from "axios";
 const useStyles = makeStyles({
-  table: {
-    width: 400,
-    margin: "auto",
-  },
+    table: {
+        width: 400,
+        margin: "auto",
+    },
 });
 function createData(Name, AccountNo, MobileNo, EmailID, MinimumBalance) {
-  return { Name, AccountNo, MobileNo, EmailID, MinimumBalance };
+    return { Name, AccountNo, MobileNo, EmailID, MinimumBalance };
 }
 
 function HomeDisplay() {
-  //   <TextField
-  //                 fullWidth
-  //                 id="standard-bare"
-  //                 variant="outlined"
-  //                 defaultValue="Search"
-  //                 InputProps={{
-  //                   endAdornment: (
-  //                     <IconButton>
-  //                       <SearchOutlined />
-  //                     </IconButton>
-  //                   ),
-  //                 }}
-  //               />
+    //   <TextField
+    //                 fullWidth
+    //                 id="standard-bare"
+    //                 variant="outlined"
+    //                 defaultValue="Search"
+    //                 InputProps={{
+    //                   endAdornment: (
+    //                     <IconButton>
+    //                       <SearchOutlined />
+    //                     </IconButton>
+    //                   ),
+    //                 }}
+    //               />
 
-  const [approvals, setApprovals] = useState([])
+    const [approvals, setApprovals] = useState([]);
 
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/v1/user/active/false").then((res) => {
-      setApprovals(res.data)
-    }).catch((e) => console.error(e))
-  }, [])
+    useEffect(() => {
+        axios
+            .get("http://localhost:8080/api/v1/user/active/false", {
+                headers: {
+                    Authorization:
+                        "Bearer " + sessionStorage.getItem("jwtToken"),
+                },
+            })
+            .then((res) => {
+                setApprovals(res.data);
+            })
+            .catch((e) => console.error(e));
+    }, []);
 
-  const makeActive = (id) => {
-    axios.put(`http://localhost:8080/api/v1/makeActive/${id}`).then((res) => {
-      console.log(res.data)
-      alert("User is now active");
-      setApprovals(approvals.filter((user) => user.customerID !== id))
-    }).catch((e) => console.error(e))
-  }
+    const makeActive = (id) => {
+        axios
+            .put(
+                `http://localhost:8080/api/v1/makeActive/${id}`,
+                {},
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res.data);
+                alert("User is now active");
+                setApprovals(
+                    approvals.filter((user) => user.customerID !== id)
+                );
+            })
+            .catch((e) => console.error(e));
+    };
 
-  const classes = useStyles();
-  return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="center">Account No</TableCell>
-            <TableCell align="center">Customer ID</TableCell>
-            <TableCell align="center">Mobile No</TableCell>
-            <TableCell align="center">Email ID</TableCell>
-            <TableCell align="center">Minimum Balance</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {approvals.map((row, idx) => (
-            <TableRow key={idx}>
-              <TableCell component="th" scope="row">
-                {`${row.firstName} ${row.middleName} ${row.lastName}`}
-              </TableCell>
-              <TableCell align="center">{row.accountNo}</TableCell>
-              <TableCell align="center">{row.customerID}</TableCell>
-              <TableCell align="center">{row.contactNo}</TableCell>
-              <TableCell align="center">{row.email}</TableCell>
-              <TableCell align="center">{row.minAccountBalance}</TableCell>
-              <TableCell align="center">
-                <div style={{ color: "white" }}>
-                  <Button
-                    variant="Approve"
-                    style={{ backgroundColor: "green", margin: "20px" }}
-                    onClick={() => makeActive(row.customerID)}
-                  >
-                    Approve
-                  </Button>
-                  {/* <Button variant="Deny" style={{ backgroundColor: "red" }}>
+    const classes = useStyles();
+    return (
+        <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="center">Account No</TableCell>
+                        <TableCell align="center">Customer ID</TableCell>
+                        <TableCell align="center">Mobile No</TableCell>
+                        <TableCell align="center">Email ID</TableCell>
+                        <TableCell align="center">Minimum Balance</TableCell>
+                        <TableCell align="center">Actions</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {approvals.map((row, idx) => (
+                        <TableRow key={idx}>
+                            <TableCell component="th" scope="row">
+                                {`${row.firstName} ${row.middleName} ${row.lastName}`}
+                            </TableCell>
+                            <TableCell align="center">
+                                {row.accountNo}
+                            </TableCell>
+                            <TableCell align="center">
+                                {row.customerID}
+                            </TableCell>
+                            <TableCell align="center">
+                                {row.contactNo}
+                            </TableCell>
+                            <TableCell align="center">{row.email}</TableCell>
+                            <TableCell align="center">
+                                {row.minAccountBalance}
+                            </TableCell>
+                            <TableCell align="center">
+                                <div style={{ color: "white" }}>
+                                    <Button
+                                        variant="Approve"
+                                        style={{
+                                            backgroundColor: "green",
+                                            margin: "20px",
+                                        }}
+                                        onClick={() =>
+                                            makeActive(row.customerID)
+                                        }
+                                    >
+                                        Approve
+                                    </Button>
+                                    {/* <Button variant="Deny" style={{ backgroundColor: "red" }}>
                     Deny{" "}
                   </Button> */}
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
 }
 
 export default HomeDisplay;

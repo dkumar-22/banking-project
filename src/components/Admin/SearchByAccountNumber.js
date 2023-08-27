@@ -61,17 +61,29 @@ function SearchByAccountNumber() {
     ]);
 
     const makeInactive = (id) => {
-        axios.put(`http://localhost:8080/api/v1/makeInactive/${id}`).then((res) => {
-            console.log(res.data)
-            alert("User is now Inactive");
-        }).catch((e) => console.error(e))
-    }
+        axios
+            .put(`http://localhost:8080/api/v1/makeInactive/${id}`,{},{
+                headers:{
+                    Authorization: "Bearer " + sessionStorage.getItem("jwtToken")
+                  }
+            })
+            .then((res) => {
+                console.log(res.data);
+                alert("User is now Inactive");
+            })
+            .catch((e) => console.error(e));
+    };
 
     function makeTable(accountNo) {
         axios
             .get(
-                "http://localhost:8080/api/v1/transactions/debit/" +
-                accountNo
+                "http://localhost:8080/api/v1/transactions/debit/" + accountNo,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 // console.log(res.data);
@@ -83,8 +95,13 @@ function SearchByAccountNumber() {
 
         axios
             .get(
-                "http://localhost:8080/api/v1/transactions/credit/" +
-                accountNo
+                "http://localhost:8080/api/v1/transactions/credit/" + accountNo,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 console.log(res.data);
@@ -99,7 +116,12 @@ function SearchByAccountNumber() {
         e.preventDefault();
         console.log(value);
         axios
-            .get(`http://localhost:8080/api/v1/getbyaccno/${value}`)
+            .get(`http://localhost:8080/api/v1/getbyaccno/${value}`, {
+                headers: {
+                    Authorization:
+                        "Bearer " + sessionStorage.getItem("jwtToken"),
+                },
+            })
             .then((res) => {
                 console.log(res.data);
                 setDetails(res.data);
@@ -176,7 +198,6 @@ function SearchByAccountNumber() {
                     backgroundColor: "whitesmoke",
                 }}
             >
-
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Search By Account Number"
@@ -211,9 +232,22 @@ function SearchByAccountNumber() {
                                 >
                                     Account Summary
                                 </Typography>
-                                {details.isActive && <button onClick={()=>makeInactive(details.customerID)} style={{ marginLeft: "35%", color: "white", backgroundColor: "red", padding: "8px", borderRadius: "15px" }}>
-                                    Disable the User
-                                </button>}
+                                {details.isActive && (
+                                    <button
+                                        onClick={() =>
+                                            makeInactive(details.customerID)
+                                        }
+                                        style={{
+                                            marginLeft: "35%",
+                                            color: "white",
+                                            backgroundColor: "red",
+                                            padding: "8px",
+                                            borderRadius: "15px",
+                                        }}
+                                    >
+                                        Disable the User
+                                    </button>
+                                )}
                                 <List disablePadding>
                                     {products.map((product) => (
                                         <ListItem

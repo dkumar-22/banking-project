@@ -14,6 +14,9 @@ import validator from "validator";
 import { useState } from "react";
 import axios from "axios";
 import md5 from "md5-hash";
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+  
 function Copyright(props) {
     return (
         <Typography
@@ -36,6 +39,39 @@ const defaultTheme = createTheme({
 });
 
 export default function SignUp() {
+
+    function warningToast(msg) {
+        toast.warn(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+
+
     const [errorMessage, setErrorMessage] = useState([]);
     const validate = (value) => {
         if (
@@ -64,22 +100,22 @@ export default function SignUp() {
         };
 
         if (submitVar.password !== submitVar.cpassword) {
-            alert("Passwords Do not match");
+            errorToast("Passwords Do not match");
         } else if (errorMessage[0] === 0) {
-            alert("Password is not strong enough");
+            errorToast("Password is not strong");
         } else if (
             submitVar.transactionPassword !== submitVar.cTransactionPassword
         ) {
-            alert("Transaction Passwords Do not match");
+            errorToast("Transaction Passwords Do not match");
         } else {
             try {
                 const resp1 = await axios.get(
-                    "http://localhost:8080/api/v1/get/user/" +
+                    "http://localhost:8080/api/v1/exists/" +
                         submitVar.customerID
                 );
                 console.log(resp1);
-                if (resp1.data === "") {
-                    alert("Customer ID does not exist");
+                if (resp1.data === false) {
+                    errorToast("Customer ID does not exist or is not Activated Yet");
                     return;
                 }
 
@@ -92,9 +128,9 @@ export default function SignUp() {
                     }
                 );
                 console.log(resp);
-                alert("Account Created");
+                successToast("Successfully Registered");
             } catch (e) {
-                alert("Error Occured");
+                errorToast("Error Occured");
             }
         }
     };
@@ -230,6 +266,7 @@ export default function SignUp() {
                         </Grid>
                     </Box>
                 </Box>
+                <ToastContainer />
                 <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>

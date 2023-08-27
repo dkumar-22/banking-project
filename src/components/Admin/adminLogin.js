@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -13,10 +11,30 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-import md5 from "md5-hash";
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 import { useNavigate } from "react-router-dom";
-import SignInSide from "../Login/Login";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+function Copyright(props) {
+    return (
+        <Typography
+            variant="body2"
+            color="text.secondary"
+            align="center"
+            {...props}
+        >
+            {"Copyright © "}
+            <Link color="inherit" href="https://mui.com/">
+                Your Website
+            </Link>{" "}
+            {new Date().getFullYear()}
+            {"."}
+        </Typography>
+    );
+}
+
+// TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme({
     palette: {
@@ -26,7 +44,68 @@ const defaultTheme = createTheme({
     },
 });
 
-function SignInAdminSide() {
+export default function SignInSide() {
+    let navigate = useNavigate();
+    const [{ adminLogged, jwtToken }, dispatch] = useDataLayerValue();
+
+    // useEffect(() => {
+    //     axios
+    //         .get("http://localhost:8080/api/v1/get/user/" + customerID)
+    //         .then((res) => {
+    //             console.log(res.data);
+    //             dispatch({
+    //                 type: "SET_DETAILS",
+    //                 details: res.data,
+    //             });
+    //         });
+    // }, []);
+
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const sVar = {
+            customerID: data.get("customerID"),
+            password: data.get("password"),
+        };
+        axios
+            .post("http://localhost:8080/auth/login", sVar)
+            .then((res) => {
+                console.log(res.data);
+                sessionStorage.setItem("jwtToken", res.data.jwtToken);
+                sessionStorage.setItem("userName", res.data.userName);
+                dispatch({
+                    type: "SET_ADMINLOGGED",
+                    adminLogged: true,
+                });
+                dispatch({
+                    type: "SET_CUSTOMERID",
+                    customerID: sVar.customerID,
+                });
+                dispatch({
+                    type: "SET_JWTTOKEN",
+                    jwtToken: res.data.jwtToken,
+                });
+            })
+            .catch((e) => {
+                console.log(e);
+                errorToast("Invalid Credentials");
+                return;
+            });
+    };
+
+    if (adminLogged) {
+        return navigate("/admin/dashboard");
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -68,20 +147,21 @@ function SignInAdminSide() {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign in as an Admin
+                            Sign in
                         </Typography>
                         <Box
                             component="form"
+                            onSubmit={handleSubmit}
                             sx={{ mt: 1 }}
                         >
                             <TextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="adminUserName"
-                                label="Admin User Name"
-                                name="adminUserName"
-                                autoComplete="adminUserName"
+                                id="customerID"
+                                label="Customer ID"
+                                name="customerID"
+                                autoComplete="customerID"
                                 autoFocus
                             />
                             <TextField
@@ -121,13 +201,19 @@ function SignInAdminSide() {
                                         Forgot Username?
                                     </Link>
                                 </Grid>
+
+                                <Grid item>
+                                    <Link href="/register" variant="body2">
+                                        {"Don't have an account? Sign Up"}
+                                    </Link>
+                                </Grid>
                             </Grid>
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
+            <ToastContainer />
+            <Copyright />
         </ThemeProvider>
     );
 }
-
-export default SignInAdminSide;

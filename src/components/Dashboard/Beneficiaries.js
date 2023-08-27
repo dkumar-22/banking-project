@@ -20,7 +20,12 @@ const BeneficiaryTable = () => {
     useEffect(() => {
         axios
             .get(
-                "http://localhost:8080/api/v1/beneficiary/" + details.accountNo
+                "http://localhost:8080/api/v1/beneficiary/" + details.accountNo,{
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 console.log(res.data);

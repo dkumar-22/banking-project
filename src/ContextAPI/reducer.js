@@ -1,6 +1,8 @@
 export const initialState = {
     logged: false,
     customerID: "",
+    jwtToken: "",
+    adminLogged: false,
     details: {
         accountNo: "",
         customerID: "",
@@ -38,6 +40,16 @@ function reducer(state, action) {
             return {
                 ...state,
                 details: action.details,
+            };
+        case "SET_JWTTOKEN":
+            return {
+                ...state,
+                jwtToken: action.jwtToken,
+            };
+        case "SET_ADMINLOGGED":
+            return {
+                ...state,
+                adminLogged: action.adminLogged,
             };
         default:
             return state;

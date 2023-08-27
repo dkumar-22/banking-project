@@ -7,17 +7,46 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // import InputArea from './components/InputArea'
 // import InputSelect from './components/InputSelect'
 
 function App() {
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
     const [data, setData] = useState(null);
     const [beneficiaries, setBeneficiaries] = useState([]);
     const [{ details }, dispatch] = useDataLayerValue();
     useEffect(() => {
         axios
             .get(
-                "http://localhost:8080/api/v1/beneficiary/" + details.accountNo
+                "http://localhost:8080/api/v1/beneficiary/" + details.accountNo,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 console.log(res);
@@ -34,14 +63,23 @@ function App() {
 
     function writeLog() {
         axios
-            .post("http://localhost:8080/api/v1/sendTransaction", {
-                senderAccNo: details.accountNo,
-                receiverAccNo: data.toAcc,
-                amount: data.amount,
-                transactionType: "IMPS",
-                message: data.remarks,
-                transDate: data.date,
-            })
+            .post(
+                "http://localhost:8080/api/v1/sendTransaction",
+                {
+                    senderAccNo: details.accountNo,
+                    receiverAccNo: data.toAcc,
+                    amount: data.amount,
+                    transactionType: "IMPS",
+                    message: data.remarks,
+                    transDate: data.date,
+                },
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
+            )
             .then((res) => console.log(res))
             .catch((e) => console.error(e));
     }
@@ -51,15 +89,22 @@ function App() {
         console.log(data);
         axios
             .put(
-                `http://localhost:8080/api/v1/transfer/${details.accountNo}/${data.toAcc}/${data.amount}`
+                `http://localhost:8080/api/v1/transfer/${details.accountNo}/${data.toAcc}/${data.amount}`,
+                {},
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 console.log(res);
                 if (res.data === "Insufficient Balance") {
-                    alert("Insufficient Balance");
+                    errorToast("Insufficient Balance");
                 } else {
                     writeLog();
-                    alert("Transaction Successful");
+                    successToast("Transaction Successful");
                 }
             })
             .catch((e) => console.error(e));
@@ -178,6 +223,7 @@ function App() {
                     </button>
                 </div>
             </div>
+            <ToastContainer />
         </form>
     );
 }

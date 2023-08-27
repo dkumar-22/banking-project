@@ -54,12 +54,18 @@ const BankDashboard = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(fromDate);
-        console.log(toDate);
-        console.log(`http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`)
+        // console.log(fromDate);
+        // console.log(toDate);
+        // console.log(`http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`)
         axios
             .get(
-                `http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`
+                `http://localhost:8080/api/v1/transaction/${fromDate}/${toDate}/${details.accountNo}`,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
                 console.log("Data", res.data);
@@ -82,8 +88,6 @@ const BankDashboard = () => {
                     <Grid item xs={4}>
                         <TextField
                             label="From Date"
-                            //value={fromAccount}
-                            //onChange={(e) => setFromAccount(e.target.value)}
                             fullWidth
                             type="date"
                             InputLabelProps={{ shrink: true }}
@@ -96,8 +100,6 @@ const BankDashboard = () => {
                     <Grid item xs={4}>
                         <TextField
                             label="To Date"
-                            //value={fromAccount}
-                            //onChange={(e) => setFromAccount(e.target.value)}
                             fullWidth
                             InputLabelProps={{ shrink: true }}
                             type="date"
@@ -120,83 +122,93 @@ const BankDashboard = () => {
                 </Grid>
             </div>
 
-            <Card className="card transactions-card">
-                <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                        Recent Transactions
-                    </Typography>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>ID</TableCell>
-                                    <TableCell>Transaction Type</TableCell>
-                                    <TableCell>Date</TableCell>
-                                    <TableCell align="right">Amount</TableCell>
-                                    <TableCell align="right">From</TableCell>
-                                    <TableCell align="right">To</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {transactions.map((transaction, idx) => (
-                                    <TableRow key={idx}>
-                                        <TableCell>{++i}</TableCell>
-                                        <TableCell>
-                                            {transaction.transactionType}
-                                        </TableCell>
-                                        <TableCell>
-                                            {transaction.transDate}
-                                        </TableCell>
-                                        <TableCell
-                                            align="right"
-                                            className="text-red-500"
-                                        >
-                                            {"- "}₹
-                                            {Math.abs(
-                                                transaction.amount.toFixed(2)
-                                            )}
+            {transactions.length > 0 && (
+                <Card className="card transactions-card">
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                            Recent Transactions
+                        </Typography>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>ID</TableCell>
+                                        <TableCell>Transaction Type</TableCell>
+                                        <TableCell>Date</TableCell>
+                                        <TableCell align="right">
+                                            Amount
                                         </TableCell>
                                         <TableCell align="right">
-                                            {transaction.senderAccNo}
+                                            From
                                         </TableCell>
-                                        <TableCell align="right">
-                                            {transaction.receiverAccNo}
-                                        </TableCell>
+                                        <TableCell align="right">To</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                            <TableBody>
-                                {credits.map((transaction, idx) => (
-                                    <TableRow key={idx}>
-                                        <TableCell>{++i}</TableCell>
-                                        <TableCell>
-                                            {transaction.transactionType}
-                                        </TableCell>
-                                        <TableCell>
-                                            {transaction.transDate}
-                                        </TableCell>
-                                        <TableCell
-                                            align="right"
-                                            className="text-green-500"
-                                        >
-                                            {"+ "}₹
-                                            {Math.abs(
-                                                transaction.amount.toFixed(2)
-                                            )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {transaction.senderAccNo}
-                                        </TableCell>
-                                        <TableCell>
-                                            {transaction.receiverAccNo}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </CardContent>
-            </Card>
+                                </TableHead>
+                                <TableBody>
+                                    {transactions.map((transaction, idx) => (
+                                        <TableRow key={idx}>
+                                            <TableCell>{++i}</TableCell>
+                                            <TableCell>
+                                                {transaction.transactionType}
+                                            </TableCell>
+                                            <TableCell>
+                                                {transaction.transDate}
+                                            </TableCell>
+                                            <TableCell
+                                                align="right"
+                                                className="text-red-500"
+                                            >
+                                                {"- "}₹
+                                                {Math.abs(
+                                                    transaction.amount.toFixed(
+                                                        2
+                                                    )
+                                                )}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {transaction.senderAccNo}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {transaction.receiverAccNo}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                                <TableBody>
+                                    {credits.map((transaction, idx) => (
+                                        <TableRow key={idx}>
+                                            <TableCell>{++i}</TableCell>
+                                            <TableCell>
+                                                {transaction.transactionType}
+                                            </TableCell>
+                                            <TableCell>
+                                                {transaction.transDate}
+                                            </TableCell>
+                                            <TableCell
+                                                align="right"
+                                                className="text-green-500"
+                                            >
+                                                {"+ "}₹
+                                                {Math.abs(
+                                                    transaction.amount.toFixed(
+                                                        2
+                                                    )
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {transaction.senderAccNo}
+                                            </TableCell>
+                                            <TableCell>
+                                                {transaction.receiverAccNo}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </CardContent>
+                </Card>
+            )}
         </Container>
     );
 };

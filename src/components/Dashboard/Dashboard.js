@@ -14,20 +14,38 @@ import {
 } from "@mui/material";
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BankDashboard = () => {
     const [{ logged, customerID, details }, dispatch] = useDataLayerValue();
     const [transactions, setTransactions] = React.useState([]);
     const [credits, setCredits] = React.useState([]);
 
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
     useEffect(() => {
         axios
             .get(
                 "http://localhost:8080/api/v1/transactions/debit/" +
-                    details.accountNo
+                    details.accountNo,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
-                console.log(res.data);
+                console.log("DEBITS",res.data);
                 setTransactions(res.data);
             })
             .catch((err) => {
@@ -37,10 +55,16 @@ const BankDashboard = () => {
         axios
             .get(
                 "http://localhost:8080/api/v1/transactions/credit/" +
-                    details.accountNo
+                    details.accountNo,
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
             )
             .then((res) => {
-                console.log(res.data);
+                console.log("CREDITS",res.data);
                 setCredits(res.data);
             })
             .catch((err) => {

@@ -20,7 +20,6 @@ export default function AddressForm({
     return (
         <Box
             component="form"
-            noValidate
             onSubmit={(e) => {
                 e.preventDefault();
                 handleNext();
@@ -209,6 +208,7 @@ export default function AddressForm({
                                     variant="standard"
                                     value={details.pstate}
                                     onChange={handleDetails}
+                                    required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>

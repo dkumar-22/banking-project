@@ -22,12 +22,12 @@ import { useDataLayerValue } from "./ContextAPI/DataLayer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import AdminUsersList from "./components/Admin/comp/adminUsersList";
 import AdminTransactionsList from "./components/Admin/comp/adminTransactionsList";
-import AdminSideMenuBar from "./components/Admin/comp/AdminSideMenuBar"
+import AdminSideMenuBar from "./components/Admin/comp/AdminSideMenuBar";
 import SearchByCustomerID from "./components/Admin/SearchByCustomerID";
 import SearchByAccountNumber from "./components/Admin/SearchByAccountNumber";
 import AdminCheckout from "./components/Admin/AccountCreationForm/Checkout";
 function App() {
-    const [{ logged }, dispatch] = useDataLayerValue();
+    const [{ logged, adminLogged }, dispatch] = useDataLayerValue();
     return (
         <Router>
             <Routes>
@@ -36,28 +36,77 @@ function App() {
                 <Route
                     exact
                     path="/search/cid"
-                    element={<><AdminSideMenuBar /><SearchByCustomerID /></>}
+                    element={
+                        adminLogged ? (
+                            <>
+                                <AdminSideMenuBar />
+                                <SearchByCustomerID />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
+                    }
                 ></Route>
                 <Route
                     exact
                     path="/search/accno"
-                    element={<><AdminSideMenuBar /><SearchByAccountNumber /></>}
+                    element={
+                        adminLogged ? (
+                            <>
+                                <AdminSideMenuBar />
+                                <SearchByAccountNumber />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
+                    }
                 ></Route>
                 <Route exact path="/register" element={<Register />}></Route>
                 <Route exact path="/apply" element={<Checkout />}></Route>
-                <Route exact path="/admin/apply" element={<><AdminSideMenuBar /><AdminCheckout /></>}></Route>
-                <Route exact path="/admin/login" element={<AdminLogin />}></Route>
-                <Route exact path="/admin/dashboard" element={<><AdminSideMenuBar /> <AdminDashboard /></>}></Route>
                 <Route
                     exact
-                    path='/admin/dashboard/users'
+                    path="/admin/apply"
+                    element={
+                        adminLogged ? (
+                            <>
+                                <AdminSideMenuBar />
+                                <AdminCheckout />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
+                    }
+                ></Route>
+                <Route
+                    exact
+                    path="/admin/login"
+                    element={<AdminLogin />}
+                ></Route>
+                <Route
+                    exact
+                    path="/admin/dashboard"
+                    element={
+                        adminLogged ? (
+                            <>
+                                <AdminSideMenuBar /> <AdminDashboard />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
+                    }
+                ></Route>
+                <Route
+                    exact
+                    path="/admin/dashboard/users"
                     element={<AdminUsersList />}
                 ></Route>
                 <Route
                     exact
-                    path='/admin/dashboard/transactions'
+                    path="/admin/dashboard/transactions"
                     element={<AdminTransactionsList />}
-                > </Route>
+                >
+                    {" "}
+                </Route>
                 <Route
                     exact
                     path="/beneficiaries"
