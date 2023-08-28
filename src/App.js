@@ -26,6 +26,7 @@ import AdminSideMenuBar from "./components/Admin/comp/AdminSideMenuBar";
 import SearchByCustomerID from "./components/Admin/SearchByCustomerID";
 import SearchByAccountNumber from "./components/Admin/SearchByAccountNumber";
 import AdminCheckout from "./components/Admin/AccountCreationForm/Checkout";
+import UpdateDetails from "./components/UpdateDetails/UpdateDetails";
 function App() {
     const [{ logged, adminLogged }, dispatch] = useDataLayerValue();
     return (
@@ -115,6 +116,20 @@ function App() {
                             <>
                                 <NavbarDrawer />
                                 <BeneficiaryTable />
+                            </>
+                        ) : (
+                            <ProtectedRoute />
+                        )
+                    }
+                ></Route>
+                <Route
+                    exact
+                    path="/update"
+                    element={
+                        logged ? (
+                            <>
+                                <NavbarDrawer />
+                                <UpdateDetails />
                             </>
                         ) : (
                             <ProtectedRoute />

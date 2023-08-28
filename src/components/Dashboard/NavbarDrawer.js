@@ -148,6 +148,7 @@ export default function PersistentDrawerLeft() {
                         { name: "Account Summary", link: "/summary" },
                         { name: "Account Statement", link: "/statement" },
                         { name: "Beneficiaries", link: "/beneficiaries" },
+                        { name: "Update Details", link: "/update" },
                     ].map((text, index) => (
                         <Link
                             to={text.link}
