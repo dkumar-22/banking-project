@@ -88,27 +88,35 @@ function App() {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(data);
-        axios
-            .put(
-                `http://localhost:8080/api/v1/transfer/${details.accountNo}/${data.toAcc}/${data.amount}`,
-                {},
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer " + sessionStorage.getItem("jwtToken"),
-                    },
-                }
-            )
-            .then((res) => {
-                console.log(res);
-                if (res.data === "Insufficient Balance") {
-                    errorToast("Insufficient Balance");
-                } else {
-                    writeLog();
-                    successToast("Transaction Successful");
-                }
-            })
-            .catch((e) => console.error(e));
+        if (data.amount < 0) {
+            errorToast("Amount cannot be negative");
+            return;
+        } else if (details.minAccountBalance < data.amount) {
+            errorToast("Amount cannot be greater than balance");
+            return;
+        } else {
+            axios
+                .put(
+                    `http://localhost:8080/api/v1/transfer/${details.accountNo}/${data.toAcc}/${data.amount}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + sessionStorage.getItem("jwtToken"),
+                        },
+                    }
+                )
+                .then((res) => {
+                    console.log(res);
+                    if (res.data === "Insufficient Balance") {
+                        errorToast("Insufficient Balance");
+                    } else {
+                        writeLog();
+                        successToast("Transaction Successful");
+                    }
+                })
+                .catch((e) => console.error(e));
+        }
     };
 
     return (
