@@ -69,7 +69,7 @@ function App() {
                     senderAccNo: details.accountNo,
                     receiverAccNo: data.toAcc,
                     amount: data.amount,
-                    transactionType: "IMPS",
+                    transactionType: "NEFT",
                     message: data.remarks,
                     transDate: data.date,
                 },

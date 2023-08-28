@@ -14,6 +14,8 @@ import Typography from "@mui/material/Typography";
 import AddressForm from "./AddressForm";
 import PaymentForm from "./PersonalInformation";
 import Review from "./Review";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
 
@@ -21,7 +23,7 @@ function Copyright() {
     return (
         <Typography variant="body2" color="text.secondary" align="center">
             {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
+            <Link color="inherit" href="/">
                 Bank
             </Link>{" "}
             {new Date().getFullYear()}
@@ -41,6 +43,26 @@ const defaultTheme = createTheme({
 });
 
 export default function Checkout() {
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+        });
+    }
+
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+        });
+    }
+
     const [details, setDetails] = useState({
         firstName: "",
         middleName: "",
@@ -110,16 +132,45 @@ export default function Checkout() {
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = (e) => {
-
         if (activeStep === steps.length - 1) {
             console.log(details);
             const submitObj = {
                 accountNo: details.phone + "00",
-                customerID: details.firstName.toLowerCase().substring(0, 3) + details.phone.substring(0, 3),
+                customerID:
+                    details.firstName.toLowerCase().substring(0, 3) +
+                    details.phone.substring(0, 3),
                 firstName: details.firstName,
                 lastName: details.lastName,
-                currentAddress: details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip,
-                permanentAddress: details.paddress1 === '' ? details.address1 + " " + details.address2 + " " + details.city + " " + details.state + " " + details.zip : details.paddress1 + " " + details.paddress2 + " " + details.pcity + " " + details.pstate + " " + details.pzip,
+                currentAddress:
+                    details.address1 +
+                    " " +
+                    details.address2 +
+                    " " +
+                    details.city +
+                    " " +
+                    details.state +
+                    " " +
+                    details.zip,
+                permanentAddress:
+                    details.paddress1 === ""
+                        ? details.address1 +
+                          " " +
+                          details.address2 +
+                          " " +
+                          details.city +
+                          " " +
+                          details.state +
+                          " " +
+                          details.zip
+                        : details.paddress1 +
+                          " " +
+                          details.paddress2 +
+                          " " +
+                          details.pcity +
+                          " " +
+                          details.pstate +
+                          " " +
+                          details.pzip,
                 contactNo: details.phone,
                 aadharNo: details.aadharno,
                 panNo: details.pan,
@@ -127,13 +178,25 @@ export default function Checkout() {
                 email: details.email,
                 middleName: details.middleName,
                 minAccountBalance: details.minAccountBalance,
-                occupation: details.occupation
-            }
+                occupation: details.occupation,
+                isActive: true
+            };
             console.log(submitObj);
-            axios.post("http://localhost:8080/api/v1/sendUser", submitObj).then((res) => console.log(res)).catch((e) => console.error(e));
+            axios
+                .post("http://localhost:8080/api/v1/sendUser", submitObj)
+                .then((res) => {
+                    console.log(res);
+                    successToast("Details Added Successfully");
+                    setActiveStep(activeStep + 1);
+                })
+                .catch((e) => {
+                    console.error(e);
+                    errorToast("Error Occured");
+                });
+        } else {
+            setActiveStep(activeStep + 1);
         }
 
-        setActiveStep(activeStep + 1);
         //upload request will also incorporated here
     };
 
@@ -167,10 +230,17 @@ export default function Checkout() {
                                     Thank you for your trust.
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    Details Added Successfully, waiting for approval from the admin.
+                                    Details Added Successfully, waiting for
+                                    approval from the admin.
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    {"Your Account Number " + details.phone + "00. \nCustomer ID: " + details.firstName.toLowerCase().substring(0, 3) + details.phone.substring(0, 3)}
+                                    {"Your Account Number " +
+                                        details.phone +
+                                        "00. \nCustomer ID: " +
+                                        details.firstName
+                                            .toLowerCase()
+                                            .substring(0, 3) +
+                                        details.phone.substring(0, 3)}
                                 </Typography>
                             </React.Fragment>
                         ) : (
@@ -181,6 +251,7 @@ export default function Checkout() {
                     </Paper>
                     <Copyright />
                 </Container>
+                <ToastContainer />
             </React.Fragment>
         </ThemeProvider>
     );

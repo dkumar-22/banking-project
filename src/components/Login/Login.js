@@ -79,10 +79,31 @@ export default function SignInSide() {
             })
             .then((res) => {
                 console.log(res.data);
-                dispatch({
-                    type: "SET_DETAILS",
-                    details: res.data,
-                });
+                if (res.data.isActive === false) {
+                    errorToast(
+                        "Account is not active!! Please contact the bank"
+                    );
+                    return;
+                } else {
+                    sessionStorage.setItem("jwtToken", jwt);
+                    sessionStorage.setItem("userName", cid);
+                    dispatch({
+                        type: "SET_CUSTOMERID",
+                        customerID: cid,
+                    });
+                    dispatch({
+                        type: "SET_JWTTOKEN",
+                        jwtToken: jwt,
+                    });
+                    dispatch({
+                        type: "SET_LOGGED",
+                        logged: true,
+                    });
+                    dispatch({
+                        type: "SET_DETAILS",
+                        details: res.data,
+                    });
+                }
             })
             .catch((e) => {
                 console.log(e);
@@ -102,24 +123,9 @@ export default function SignInSide() {
             .post("http://localhost:8080/auth/login", sVar)
             .then((res) => {
                 console.log(res.data);
-                sessionStorage.setItem("jwtToken", res.data.jwtToken);
-                sessionStorage.setItem("userName", res.data.userName);
-                dispatch({
-                    type: "SET_LOGGED",
-                    logged: true,
-                });
-                dispatch({
-                    type: "SET_CUSTOMERID",
-                    customerID: sVar.customerID,
-                });
-                dispatch({
-                    type: "SET_JWTTOKEN",
-                    jwtToken: res.data.jwtToken,
-                });
-                handleDetails(
-                    sVar.customerID,
-                    sessionStorage.getItem("jwtToken")
-                );
+                if (res.data === "Credentials Invalid !!")
+                    errorToast("Invalid Credentials");
+                else handleDetails(sVar.customerID, res.data.jwtToken);
             })
             .catch((e) => {
                 console.log(e);

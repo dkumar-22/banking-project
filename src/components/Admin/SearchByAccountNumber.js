@@ -15,7 +15,20 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Tables from "../Table/Table";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function SearchByAccountNumber() {
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
     const [details, setDetails] = useState({});
     const [visible, makeVisible] = useState(false);
     const [value, setVal] = useState("");
@@ -62,14 +75,18 @@ function SearchByAccountNumber() {
 
     const makeInactive = (id) => {
         axios
-            .put(`http://localhost:8080/api/v1/makeInactive/${id}`,{},{
-                headers:{
-                    Authorization: "Bearer " + sessionStorage.getItem("jwtToken")
-                  }
-            })
+            .put(
+                `http://localhost:8080/api/v1/makeInactive/${id}`,
+                {},
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
+            )
             .then((res) => {
                 console.log(res.data);
-                alert("User is now Inactive");
             })
             .catch((e) => console.error(e));
     };
@@ -186,6 +203,7 @@ function SearchByAccountNumber() {
 
     return (
         <div style={{ padding: "40px" }}>
+            <ToastContainer/>
             <Paper
                 component="form"
                 onSubmit={handleSearch}
@@ -234,9 +252,13 @@ function SearchByAccountNumber() {
                                 </Typography>
                                 {details.isActive && (
                                     <button
-                                        onClick={() =>
-                                            makeInactive(details.customerID)
-                                        }
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            makeInactive(details.customerID);
+                                            successToast(
+                                                "User is now Inactive"
+                                            );
+                                        }}
                                         style={{
                                             marginLeft: "35%",
                                             color: "white",

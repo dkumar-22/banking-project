@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 function Copyright(props) {
@@ -43,6 +45,26 @@ const defaultTheme = createTheme({
 });
 
 export default function SignIn() {
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+        });
+    }
+
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            draggable: true,
+        });
+    }
+
     const [val, setVal] = React.useState(false);
     const handleSubmit1 = (event) => {
         event.preventDefault();
@@ -53,7 +75,7 @@ export default function SignIn() {
         };
 
         if (submitVar.password !== "8080") {
-            alert("Incorrect OTP");
+            errorToast("Incorrect OTP");
             return;
         } else {
             axios
@@ -62,9 +84,12 @@ export default function SignIn() {
                     if (res.data) {
                         setVal(true);
                     } else {
-                        setVal(false);
+                        errorToast("User does not exist");
                     }
-                });
+                }).catch((e)=>{
+                    errorToast("User does not exist");
+                    return;
+                })
         }
     };
 
@@ -76,32 +101,44 @@ export default function SignIn() {
             newPassword: data.get("npassword"),
             confirmPassword: data.get("cpassword"),
         };
+        console.log(submitVar);
         if (submitVar.newPassword === submitVar.confirmPassword) {
             axios
-                .post(
+                .put(
                     "http://localhost:8080/api/v1/resetPassword/" +
                         submitVar.email,
-                    submitVar
+                    {
+                        password: submitVar.newPassword,
+                    }
                 )
                 .then((res) => {
                     if (res.data) {
-                        alert("Password Reset Successfully");
+                        successToast("Password Reset Successfully");
                     } else {
-                        alert("Password Reset Failed");
+                        errorToast("Password Reset Failed");
                     }
                 })
                 .catch((err) => {
-                    alert("Password Reset Failed");
+                    errorToast("Password Reset Failed");
                 });
         } else {
-            alert("Passwords do not match");
+            errorToast("Passwords do not match");
         }
     };
+
+    function handleSubmit(event) {
+        if (!val) {
+            handleSubmit1(event);
+        } else {
+            handleSubmit2(event);
+        }
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
+                <ToastContainer />
                 <Box
                     sx={{
                         marginTop: 8,
@@ -116,11 +153,7 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box
-                        component="form"
-                        onSubmit={setVal ? handleSubmit1 : handleSubmit2}
-                        sx={{ mt: 1 }}
-                    >
+                    <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
                         <TextField
                             margin="normal"
                             required
@@ -166,14 +199,16 @@ export default function SignIn() {
                                 />
                             </>
                         )}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                            Recover Password
-                        </Button>
+                        {
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Recover Password
+                            </Button>
+                        }
                     </Box>
                 </Box>
                 <Copyright sx={{ mt: 8, mb: 4 }} />

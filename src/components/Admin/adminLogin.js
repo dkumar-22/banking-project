@@ -25,7 +25,7 @@ function Copyright(props) {
             {...props}
         >
             {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
+            <Link color="inherit" href="/">
                 Your Website
             </Link>{" "}
             {new Date().getFullYear()}
@@ -77,30 +77,34 @@ export default function SignInSide() {
             customerID: data.get("customerID"),
             password: data.get("password"),
         };
-        axios
-            .post("http://localhost:8080/auth/login", sVar)
-            .then((res) => {
-                console.log(res.data);
-                sessionStorage.setItem("jwtToken", res.data.jwtToken);
-                sessionStorage.setItem("userName", res.data.userName);
-                dispatch({
-                    type: "SET_ADMINLOGGED",
-                    adminLogged: true,
+        if (sVar.customerID === "admin") {
+            axios
+                .post("http://localhost:8080/auth/login", sVar)
+                .then((res) => {
+                    console.log(res.data);
+                    sessionStorage.setItem("jwtToken", res.data.jwtToken);
+                    sessionStorage.setItem("userName", res.data.userName);
+                    dispatch({
+                        type: "SET_ADMINLOGGED",
+                        adminLogged: true,
+                    });
+                    dispatch({
+                        type: "SET_CUSTOMERID",
+                        customerID: sVar.customerID,
+                    });
+                    dispatch({
+                        type: "SET_JWTTOKEN",
+                        jwtToken: res.data.jwtToken,
+                    });
+                })
+                .catch((e) => {
+                    console.log(e);
+                    errorToast("Invalid Credentials");
+                    return;
                 });
-                dispatch({
-                    type: "SET_CUSTOMERID",
-                    customerID: sVar.customerID,
-                });
-                dispatch({
-                    type: "SET_JWTTOKEN",
-                    jwtToken: res.data.jwtToken,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-                errorToast("Invalid Credentials");
-                return;
-            });
+        } else {
+            errorToast("Unauthorized Access");
+        }
     };
 
     if (adminLogged) {
@@ -162,6 +166,7 @@ export default function SignInSide() {
                                 label="Customer ID"
                                 name="customerID"
                                 autoComplete="customerID"
+                                
                                 autoFocus
                             />
                             <TextField

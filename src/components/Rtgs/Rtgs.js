@@ -70,7 +70,7 @@ function App() {
                     senderAccNo: details.accountNo,
                     receiverAccNo: data.toAcc,
                     amount: data.amount,
-                    transactionType: "IMPS",
+                    transactionType: "RTGS",
                     message: data.remarks,
                     transDate: data.date,
                 },

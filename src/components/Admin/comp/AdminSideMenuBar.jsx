@@ -95,6 +95,13 @@ const styles = {
   color: "black"
 }
 
+function handleLogout() {
+  sessionStorage.removeItem("jwtToken");
+  sessionStorage.removeItem("user");
+  window.location.href = "/";
+}
+
+
 export default function MiniDrawer({ curr, setCurr }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -250,6 +257,28 @@ export default function MiniDrawer({ curr, setCurr }) {
               </ListItemButton>
             </ListItem></Link>
         </List>
+        <Divider />
+                <List>
+                    {[{ name: "Logout", link: "/" }].map((text, index) => (
+                        <Link
+                            to={text.link}
+                            style={{ color: "black", textDecoration: "none" }}
+                        >
+                            <ListItem key={text.name} disablePadding>
+                                <ListItemButton onClick={handleLogout}>
+                                    <ListItemIcon>
+                                        {index % 2 === 0 ? (
+                                            <InboxIcon />
+                                        ) : (
+                                            <MailIcon />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText primary={text.name} />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                    ))}
+                </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />

@@ -67,6 +67,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 const useStyles = makeStyles({
@@ -96,6 +98,20 @@ function HomeDisplay() {
 
     const [approvals, setApprovals] = useState([]);
 
+    function successToast(msg) {
+        toast.success(msg, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 5000,
+        });
+    }
+
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: toast.POSITION.TOP_CENTER,
+            autoClose: 5000,
+        });
+    }
+
     useEffect(() => {
         axios
             .get("http://localhost:8080/api/v1/user/active/false", {
@@ -124,12 +140,15 @@ function HomeDisplay() {
             )
             .then((res) => {
                 console.log(res.data);
-                alert("User is now active");
+                successToast("User is now active");
                 setApprovals(
                     approvals.filter((user) => user.customerID !== id)
                 );
             })
-            .catch((e) => console.error(e));
+            .catch((e) => {
+                console.error(e);
+                errorToast("Something went wrong");
+            });
     };
 
     const classes = useStyles();
@@ -189,6 +208,7 @@ function HomeDisplay() {
                     ))}
                 </TableBody>
             </Table>
+            <ToastContainer />
         </TableContainer>
     );
 }

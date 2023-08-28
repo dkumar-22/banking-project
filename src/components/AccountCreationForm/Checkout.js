@@ -127,7 +127,8 @@ export default function Checkout() {
                 email: details.email,
                 middleName: details.middleName,
                 minAccountBalance: details.minAccountBalance,
-                occupation: details.occupation
+                occupation: details.occupation,
+                isActive: false
             }
             console.log(submitObj);
             axios.post("http://localhost:8080/api/v1/sendUser", submitObj).then((res) => console.log(res)).catch((e) => console.error(e));

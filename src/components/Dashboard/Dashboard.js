@@ -35,6 +35,28 @@ const BankDashboard = () => {
     useEffect(() => {
         axios
             .get(
+                "http://localhost:8080/api/v1/get/user/" +
+                    sessionStorage.getItem("userName"),
+                {
+                    headers: {
+                        Authorization:
+                            "Bearer " + sessionStorage.getItem("jwtToken"),
+                    },
+                }
+            )
+            .then((res) => {
+                console.log("DDDDDDDDD", res.data);
+                dispatch({
+                    type: "SET_DETAILS",
+                    details: res.data,
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+
+        axios
+            .get(
                 "http://localhost:8080/api/v1/transactions/debit/" +
                     details.accountNo,
                 {
@@ -45,7 +67,7 @@ const BankDashboard = () => {
                 }
             )
             .then((res) => {
-                console.log("DEBITS",res.data);
+                console.log("DEBITS", res.data);
                 setTransactions(res.data);
             })
             .catch((err) => {
@@ -64,7 +86,7 @@ const BankDashboard = () => {
                 }
             )
             .then((res) => {
-                console.log("CREDITS",res.data);
+                console.log("CREDITS", res.data);
                 setCredits(res.data);
             })
             .catch((err) => {

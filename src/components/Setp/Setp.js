@@ -6,6 +6,8 @@ import Input from "../Input/Input";
 import validator from "validator";
 import axios from "axios";
 import { useDataLayerValue } from "../../ContextAPI/DataLayer";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Setp() {
     const [data, setData] = useState(null);
     const [{ details }, dispatch] = useDataLayerValue();
@@ -16,6 +18,28 @@ function Setp() {
         });
     };
     const [errorMessage, setErrorMessage] = useState("");
+
+    function errorToast(message) {
+        toast.error(message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    }
+
+    function successToast(message) {
+        toast.success(message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    }
 
     useEffect(() => {
         if (data?.loginpass) validate(data.loginpass);
@@ -40,23 +64,32 @@ function Setp() {
     };
 
     const handleSubmit = (e) => {
+        e.preventDefault();
         if (data.transPass !== data.confirmTransPass) {
-            alert("Transaction Password do not match");
+            errorToast("Transaction Password do not match");
             return;
         }
         if (data.loginpass !== data.confirmloginpass) {
-            alert("Login Password do not match");
+            errorToast("Login Password do not match");
             return;
         }
-        e.preventDefault();
+
         axios
-            .post("http://localhost:5000/api/user/updatePassword/"+details.customerID, data)
+            .put(
+                "http://localhost:8080/api/v1/updatePassword/" +
+                    details.customerID,
+                {
+                    password: data.loginpass,
+                    transactionPassword: data.transPass,
+                }
+            )
             .then((res) => {
                 console.log(res);
-                alert(JSON.stringify("Password Changed Succesfully"));
+                successToast(JSON.stringify("Password Changed Succesfully"));
             })
             .catch((err) => {
                 console.log(err);
+                errorToast(JSON.stringify(err));
             });
     };
 
@@ -66,6 +99,7 @@ function Setp() {
             className="my-12 max-w-2xl mx-auto"
             onSubmit={handleSubmit}
         >
+            <ToastContainer />
             <div className="border-b border-gray-900/10 pb-12">
                 <h2 className="text-base font-semibold leading-7 text-gray-900">
                     Set New Password

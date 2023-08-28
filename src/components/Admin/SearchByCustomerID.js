@@ -15,13 +15,37 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Tables from "../Table/Table";
+import { useNavigate } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function SearchByAccountNumber() {
+    function errorToast(msg) {
+        toast.error(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
+    function successToast(msg) {
+        toast.success(msg, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+        });
+    }
+
     const [details, setDetails] = useState({});
     const [visible, makeVisible] = useState(false);
     const [value, setVal] = useState("");
     const [transactions, setTransactions] = React.useState([]);
     const [credits, setCredits] = React.useState([]);
+    const navigate = useNavigate();
     const [products, setProducts] = useState([
         {
             name: "Name",
@@ -67,7 +91,6 @@ function SearchByAccountNumber() {
             )
             .then((res) => {
                 console.log(res.data);
-                alert("User is now Inactive");
             })
             .catch((e) => console.error(e));
     };
@@ -233,15 +256,22 @@ function SearchByAccountNumber() {
                                     </Typography>
                                     {details.isActive && (
                                         <button
-                                            onClick={() =>
-                                                makeInactive(details.customerID)
-                                            }
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                makeInactive(
+                                                    details.customerID
+                                                );
+                                                successToast(
+                                                    "User is now Inactive"
+                                                );
+                                            }}
                                             style={{
                                                 marginLeft: "35%",
                                                 color: "white",
                                                 backgroundColor: "red",
                                                 padding: "8px",
                                                 borderRadius: "15px",
+                                                boxShadow: "5px 5px 5px grey",
                                             }}
                                         >
                                             Disable the User
@@ -302,6 +332,7 @@ function SearchByAccountNumber() {
                         </Paper>
                     </Container>
                     <Tables credits={credits} transactions={transactions} />
+                    <ToastContainer />
                 </>
             )}
         </div>
