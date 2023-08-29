@@ -39,15 +39,10 @@ function App() {
     };
 
     function addBenificiary() {
+        console.log(details.accountNo, data.accountNumber)
         axios
-            .post(
-                "http://localhost:8080/api/v1/sendBeneficiary",
-                {
-                    name: data.name,
-                    receiverAccNo: data.accountNumber,
-                    nickname: data.nickname,
-                    accountNo: details.accountNo,
-                },
+            .get(
+                `http://localhost:8080/api/v1/beneficiary/${details.accountNo}/${data.accountNumber}`,
                 {
                     headers: {
                         Authorization:
@@ -56,12 +51,42 @@ function App() {
                 }
             )
             .then((res) => {
-                console.log(res);
-                successToast("Beneficiary added successfully");
+                console.log(res.data==='')
+                if (res.data !== '') {
+                    errorToast("Beneficiary already exists");
+                    return;
+                } else {
+                    axios
+                        .post(
+                            "http://localhost:8080/api/v1/sendBeneficiary",
+                            {
+                                name: data.name,
+                                receiverAccNo: data.accountNumber,
+                                nickname: data.nickname,
+                                accountNo: details.accountNo,
+                            },
+                            {
+                                headers: {
+                                    Authorization:
+                                        "Bearer " +
+                                        sessionStorage.getItem("jwtToken"),
+                                },
+                            }
+                        )
+                        .then((res) => {
+                            console.log(res);
+                            successToast("Beneficiary added successfully");
+                        })
+                        .catch((e) => {
+                            console.error(e);
+                            errorToast("Error Occured");
+                        });
+                }
             })
             .catch((e) => {
                 console.error(e);
                 errorToast("Error Occured");
+                return;
             });
     }
 

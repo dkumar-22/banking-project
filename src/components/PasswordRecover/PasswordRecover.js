@@ -1,8 +1,10 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
+import validator from "validator";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -25,7 +27,7 @@ function Copyright(props) {
             {...props}
         >
             {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
+            <Link color="inherit" href="/">
                 Your Website
             </Link>{" "}
             {new Date().getFullYear()}
@@ -86,10 +88,29 @@ export default function SignIn() {
                     } else {
                         errorToast("User does not exist");
                     }
-                }).catch((e)=>{
+                })
+                .catch((e) => {
                     errorToast("User does not exist");
                     return;
-                })
+                });
+        }
+    };
+
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const validate = (value) => {
+        if (
+            validator.isStrongPassword(value, {
+                minLength: 8,
+                minLowercase: 1,
+                minUppercase: 1,
+                minNumbers: 1,
+                minSymbols: 1,
+            })
+        ) {
+            setErrorMessage("Is Strong Password");
+        } else {
+            setErrorMessage("Is Not Strong Password");
         }
     };
 
@@ -102,7 +123,11 @@ export default function SignIn() {
             confirmPassword: data.get("cpassword"),
         };
         console.log(submitVar);
-        if (submitVar.newPassword === submitVar.confirmPassword) {
+
+        if (errorMessage === "Is Not Strong Password") {
+            errorToast("Password is not strong enough");
+            return;
+        } else if (submitVar.newPassword === submitVar.confirmPassword) {
             axios
                 .put(
                     "http://localhost:8080/api/v1/resetPassword/" +
@@ -153,7 +178,11 @@ export default function SignIn() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" sx={{ mt: 1 }} onSubmit={handleSubmit}>
+                    <Box
+                        component="form"
+                        sx={{ mt: 1 }}
+                        onSubmit={handleSubmit}
+                    >
                         <TextField
                             margin="normal"
                             required
@@ -185,7 +214,18 @@ export default function SignIn() {
                                     type="password"
                                     id="npassword"
                                     autoComplete="current-password"
+                                    onChange={(e) => validate(e.target.value)}
                                 />
+                                {errorMessage === "" ? null : (
+                                    <span
+                                        style={{
+                                            fontWeight: "bold",
+                                            color: "red",
+                                        }}
+                                    >
+                                        {errorMessage}
+                                    </span>
+                                )}
 
                                 <TextField
                                     margin="normal"
